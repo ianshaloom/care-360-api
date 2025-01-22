@@ -1,7 +1,7 @@
 import 'package:care360/data/firestore_ds.dart';
 import 'package:care360/errors/failure_n_success.dart';
 import 'package:care360/errors/firestore_exceptions.dart';
-import 'package:care360/models/activation_model/activation_model.dart';
+import 'package:care360/models/activation-model/activation_model.dart';
 import 'package:dartz/dartz.dart';
 
 /// KaisaAbsImpl class
