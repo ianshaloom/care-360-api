@@ -13,6 +13,7 @@ class CaregiverModel {
     required this.name,
     required this.phone,
     required this.qualifications,
+    // required this.preferredCareTypes,
     required this.availability,
     required this.assignedShifts,
     required this.registeredCode,
@@ -27,6 +28,7 @@ class CaregiverModel {
         name = '',
         phone = '',
         qualifications = [],
+        // preferredCareTypes = [],
         availability = [],
         assignedShifts = [],
         registeredCode = '',
@@ -54,6 +56,9 @@ class CaregiverModel {
 
   /// List of qualifications the caregiver possesses
   final List<String> qualifications;
+
+  /// List of preferred care types the caregiver can provide
+  // final List<String> preferredCareTypes;
 
   /// List of days/times the caregiver is available
   final List<String> availability;

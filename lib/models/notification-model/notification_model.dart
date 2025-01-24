@@ -13,6 +13,7 @@ class NotificationModel {
     required this.message,
     required this.type,
     required this.read,
+    required this.relatedEntityId,
     required this.createdAt,
   });
 
@@ -23,6 +24,7 @@ class NotificationModel {
         message = '',
         type = '',
         read = false,
+        relatedEntityId = '',
         createdAt = DateTime.now();
 
   /// Static function to create [NotificationModel] from a Firestore snapshot
@@ -47,6 +49,9 @@ class NotificationModel {
   /// Indicates whether the notification has been read
   final bool read;
 
+  /// Unique identifier of the related entity (e.g., shift ID, request ID)
+  final String relatedEntityId;
+
   /// Timestamp when the notification was created
   final DateTime createdAt;
 
@@ -54,6 +59,7 @@ class NotificationModel {
   @override
   String toString() {
     return 'NotificationModel{notificationId: $notificationId, uid: $uid,'
-        ' message: $message, type: $type, read: $read, createdAt: $createdAt}';
+        ' message: $message, type: $type, read: $read,'
+        ' relatedEntityId: $relatedEntityId, createdAt: $createdAt}';
   }
 }

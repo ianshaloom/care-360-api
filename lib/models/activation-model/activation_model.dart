@@ -1,3 +1,4 @@
+import 'package:dart_firebase_admin/firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'activation_model.g.dart';
@@ -29,6 +30,33 @@ class ActivationModel {
   /// Static function to create [ActivationModel] from a map
   factory ActivationModel.fromSnapshot(Map<String, dynamic> json) =>
       _$ActivationModelFromJson(json);
+
+  /// Static function to create [ActivationModel] from a DocumentSnapshot
+  factory ActivationModel.fromDocumentSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> document,
+  ) {
+    if (document.data() == null) return ActivationModel.empty();
+
+    final data = document.data()!;
+
+    return ActivationModel(
+      id: document.id,
+      code: data['code'] as String,
+      isUsed: data['isUsed'] as bool,
+      createdAt: data.containsKey('createdAt')
+          ? DateTime.parse(data['updatedAt'] as String)
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] == null
+          ? null
+          : DateTime.parse(data['updatedAt'] as String),
+      usedAt: data['usedAt'] == null
+          ? null
+          : DateTime.parse(data['usedAt'] as String),
+      expiresAt: data['expiresAt'] == null
+          ? null
+          : DateTime.parse(data['expiresAt'] as String),
+    );
+  }
 
   /// Convert [ActivationModel] to a map
   Map<String, dynamic> toSnapshot() => _$ActivationModelToJson(this);
