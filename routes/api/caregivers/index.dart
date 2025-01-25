@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:care360/data/care360_repository.dart';
 import 'package:care360/errors/failure_n_success.dart';
+import 'package:care360/models/care-giver-model/care_giver_model.dart';
+import 'package:care360/services/caregiver_service.dart';
 import 'package:dart_frog/dart_frog.dart';
 
 Future<Response> onRequest(RequestContext context) {
@@ -13,7 +14,6 @@ Future<Response> onRequest(RequestContext context) {
     case HttpMethod.put:
     case HttpMethod.delete:
     case HttpMethod.patch:
-      return _patch(context);
     case HttpMethod.head:
     case HttpMethod.options:
       return Future.value(Response(statusCode: HttpStatus.methodNotAllowed));
@@ -22,18 +22,19 @@ Future<Response> onRequest(RequestContext context) {
 
 Future<Response> _get(RequestContext context) async {
   try {
-    final repo = context.read<Care360Repository>();
-    final id = context.request.headers['id']!;
+    final repo = context.read<CaregiverService>();
 
     //  failure n result
     Failure failure = EmptyFailure(errorMessage: '');
-    var activation = <String, dynamic>{};
 
-    final response = await repo.getActivation(id);
+    // List of caregivers maps
+    var careGivers = <Map<String, dynamic>>[];
+
+    final response = await repo.getAllCaregivers();
 
     response.fold(
       (f) => failure = f,
-      (s) => activation = s,
+      (s) => careGivers = CaregiverModel.listToSnapshot(s),
     );
 
     if (failure.errorMessage.isNotEmpty) {
@@ -45,7 +46,7 @@ Future<Response> _get(RequestContext context) async {
       );
     }
 
-    return Response.json(body: activation);
+    return Response.json(body: careGivers);
   } catch (e) {
     return Response(
       statusCode: HttpStatus.internalServerError,
@@ -56,48 +57,16 @@ Future<Response> _get(RequestContext context) async {
 
 Future<Response> _post(RequestContext context) async {
   try {
-    final repo = context.read<Care360Repository>();
-    final id = context.request.headers['id']!;
-
-    // failure n result
-    Failure failure = EmptyFailure(errorMessage: '');
-    var success = '';
-
-    final response = await repo.postActivation(id);
-
-    response.fold(
-      (f) => failure = f,
-      (s) => success = s,
-    );
-
-    if (failure.errorMessage.isNotEmpty) {
-      final error = failure.errorMessage;
-
-      return Response.json(
-        statusCode: HttpStatus.internalServerError,
-        body: {'error': error},
-      );
-    }
-
-    return Response.json(body: success);
-  } catch (e) {
-    return Response(
-      statusCode: HttpStatus.internalServerError,
-      body: e.toString(),
-    );
-  }
-}
-
-Future<Response> _patch(RequestContext context) async {
-  try {
-    final repo = context.read<Care360Repository>();
+    final repo = context.read<CaregiverService>();
     final data = await context.request.json() as Map<String, dynamic>;
 
     // failure n result
     Failure failure = EmptyFailure(errorMessage: '');
     var success = '';
 
-    final response = await repo.updateActivation(data);
+    final response = await repo.createCaregiver(
+      CaregiverModel.fromSnapshot(data),
+    );
 
     response.fold(
       (f) => failure = f,
@@ -113,7 +82,11 @@ Future<Response> _patch(RequestContext context) async {
       );
     }
 
-    return Response.json(body: success);
+    return Response.json(
+      body: {
+        'message': 'Caregiver deleted successfully {$success}',
+      },
+    );
   } catch (e) {
     return Response(
       statusCode: HttpStatus.internalServerError,

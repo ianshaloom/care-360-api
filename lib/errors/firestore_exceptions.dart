@@ -16,31 +16,31 @@ class FireDartException implements Exception {
 }
 
 /// This is the class for the failure of the application.
-class FDFetchException extends FireDartException {
+class FireDartGetException extends FireDartException {
   /// This is the constructor for the FDFetchException class.
-  FDFetchException({required super.message});
+  FireDartGetException({required super.message});
 }
 
 /// This is the class for the success of the application.
-class FDNotSavedException extends FireDartException {
+class FireDartSetException extends FireDartException {
   /// This is the constructor for the FDNotSavedException class.
-  FDNotSavedException({required super.message});
+  FireDartSetException({required super.message});
 }
 
 /// This is the class for the failure of the application.
-class FDNotUpdatedException extends FireDartException {
-  /// This is the constructor for the FDNotUpdatedException class.
-  FDNotUpdatedException({required super.message});
+class FireDartUpdateException extends FireDartException {
+  /// This is the constructor for the FireDartNotUpdatedException class.
+  FireDartUpdateException({required super.message});
 }
 
 /// This is the class for the failure of the application.
-class FDNotDeletedException extends FireDartException {
-  /// This is the constructor for the FDNotDeletedException class.
-  FDNotDeletedException({required super.message});
+class FireDartDeleteException extends FireDartException {
+  /// This is the constructor for the FireDartNotDeletedException class.
+  FireDartDeleteException({required super.message});
 }
 
 /// This is the class for the failure of the application.
-class FDGenericException extends FireDartException {
-  /// This is the constructor for the FDGenericException class.
-  FDGenericException({required super.message});
+class FireDartGenericException extends FireDartException {
+  /// This is the constructor for the FireDartGenericException class.
+  FireDartGenericException({required super.message});
 }

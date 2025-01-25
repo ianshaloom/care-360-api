@@ -1,7 +1,7 @@
 import 'package:care360/constants/constants.dart';
 import 'package:care360/errors/firestore_exceptions.dart';
-import 'package:firedart/firedart.dart';
-import 'package:firedart/firestore/firestore.dart';
+import 'package:care360/models/activation-model/activation_model.dart';
+import 'package:dart_firebase_admin/firestore.dart';
 
 /// FirestoreDs class
 class FirestoreDs {
@@ -16,25 +16,22 @@ class FirestoreDs {
     try {
       final docId = data['id'] as String;
 
-      await firestore
-          .collection(activationCollection)
-          .document(docId)
-          .set(data);
+      await firestore.collection(activationCollection).doc(docId).set(data);
     } catch (e) {
-      throw FDNotSavedException(message: 'Firestore Error: $e');
+      throw FireDartSetException(message: 'Firestore Error: $e');
     }
   }
 
   /// get activation data by id
   Future<Map<String, dynamic>> getActivation(String id) async {
     try {
-      final shopRef = firestore.collection(activationCollection).document(id);
+      final shopRef = firestore.collection(activationCollection).doc(id);
 
       final shopData = await shopRef.get();
 
-      return shopData.map;
+      return ActivationModel.fromDocumentSnapshot(shopData).toSnapshot();
     } catch (e) {
-      throw FDFetchException(message: 'Firestore Error: $e');
+      throw FireDartGetException(message: 'Firestore Error: $e');
     }
   }
 
@@ -43,14 +40,11 @@ class FirestoreDs {
     try {
       final docId = data['id'] as String;
 
-      await firestore
-          .collection(activationCollection)
-          .document(docId)
-          .update(data);
+      await firestore.collection(activationCollection).doc(docId).update(data);
 
       return 'Success';
     } catch (e) {
-      throw FDNotUpdatedException(message: 'Firestore Update Error: $e');
+      throw FireDartUpdateException(message: 'Firestore Update Error: $e');
     }
   }
 }

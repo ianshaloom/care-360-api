@@ -6,7 +6,7 @@ import 'package:dart_firebase_admin/dart_firebase_admin.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 import 'package:dart_frog/dart_frog.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
 Handler middleware(Handler handler) {
   final h = handler

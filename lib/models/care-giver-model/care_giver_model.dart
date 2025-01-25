@@ -75,10 +75,16 @@ class CaregiverModel {
   /// Timestamp when the caregiver was last updated
   final DateTime? updatedAt;
 
+  /// List of CaregiverModel objects to a list of Firestore-compatible maps
+  static List<Map<String, dynamic>> listToSnapshot(List<CaregiverModel> list) {
+    return list.map((e) => e.toSnapshot()).toList();
+  }
+
   /// Override toString method for better logging and debugging
   @override
   String toString() {
-    return 'CaregiverModel{caregiverId: $caregiverId, uid: $uid, name: $name, phone: $phone,'
+    return 'CaregiverModel{caregiverId: $caregiverId, uid: $uid, '
+        'name: $name, phone: $phone,'
         ' qualifications: $qualifications, availability: $availability,'
         ' assignedShifts: $assignedShifts, registeredCode: $registeredCode,'
         ' createdAt: $createdAt, updatedAt: $updatedAt}';

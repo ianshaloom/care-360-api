@@ -30,7 +30,7 @@ class Care360Repository {
       await firestoreDs.setActivation(activation.toSnapshot());
 
       return const Right('Success');
-    } on FDNotSavedException catch (e) {
+    } on FireDartSetException catch (e) {
       return Left(
         FirestoreFailure(errorMessage: e.message),
       );
@@ -47,7 +47,7 @@ class Care360Repository {
       final activation = await firestoreDs.getActivation(id);
 
       return Right(activation);
-    } on FDFetchException catch (e) {
+    } on FireDartGetException catch (e) {
       return Left(
         FirestoreFailure(errorMessage: e.message),
       );
@@ -66,7 +66,7 @@ class Care360Repository {
       final result = await firestoreDs.updateActivation(data);
 
       return Right(result);
-    } on FDNotUpdatedException catch (e) {
+    } on FireDartUpdateException catch (e) {
       return Left(
         FirestoreFailure(errorMessage: e.message),
       );

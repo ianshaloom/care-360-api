@@ -1,71 +1,72 @@
 #!/bin/bash
 
-# Create directories
-echo "Creating directories..."
-mkdir -p "./lib/services"
-mkdir -p "./lib/utils"
-mkdir -p "./lib/middleware"
-mkdir -p "./test/models"
-mkdir -p "./test/services"
-mkdir -p "./test/routes"
-mkdir -p "./test/utils"
-echo "Directories created successfully!"
+# Script to delete all existing routes and create new routes for the Care 360 backend project
+# Run this script from the root of your Dart project directory
 
-# Create Dart Frog routes
-echo "Creating Dart Frog routes..."
-dart_frog new route "/index" && echo "Created route: /index"
-dart_frog new route "/users/index" && echo "Created route: /users/index"
-dart_frog new route "/users/[id]" && echo "Created route: /users/[id]"
-dart_frog new route "/caregivers/index" && echo "Created route: /caregivers/index"
-dart_frog new route "/caregivers/[id]" && echo "Created route: /caregivers/[id]"
-dart_frog new route "/carehomes/index" && echo "Created route: /carehomes/index"
-dart_frog new route "/carehomes/[id]/index" && echo "Created route: /carehomes/[id]/index"
-dart_frog new route "/carehomes/[id]/clients/index" && echo "Created route: /carehomes/[id]/clients/index"
-dart_frog new route "/carehomes/[id]/clients/[id]" && echo "Created route: /carehomes/[id]/clients/[id]"
-dart_frog new route "/requests/index" && echo "Created route: /requests/index"
-dart_frog new route "/requests/[id]/index" && echo "Created route: /requests/[id]/index"
-dart_frog new route "/requests/[id]/assign" && echo "Created route: /requests/[id]/assign"
-dart_frog new route "/shifts/index" && echo "Created route: /shifts/index"
-dart_frog new route "/shifts/[id]" && echo "Created route: /shifts/[id]"
-dart_frog new route "/notifications/index" && echo "Created route: /notifications/index"
-dart_frog new route "/reports/index" && echo "Created route: /reports/index"
-dart_frog new route "/reports/[id]" && echo "Created route: /reports/[id]"
+# Enable verbose mode
+set -x
+
+# Function to delete a directory (route) if it exists
+delete_route() {
+  local route_path=$1
+  if [ -d "$route_path" ]; then
+    rm -rf "$route_path" && echo "Deleted route: $route_path"
+  else
+    echo "Route does not exist: $route_path"
+  fi
+}
+
+# Function to create a new route and print a success message
+create_route() {
+  local route_path=$1
+  dart_frog new route "$route_path" && echo "Created route: $route_path"
+}
+
+# Delete all existing routes
+echo "Deleting all existing routes..."
+delete_route "routes/caregivers"
+delete_route "routes/carehomes"
+delete_route "routes/clients"
+delete_route "routes/requests"
+delete_route "routes/shifts"
+delete_route "routes/notifications"
+delete_route "routes/reports"
+delete_route "routes/users"
+
+# Create new routes for users
+create_route "/users/index"
+create_route "/users/[id]"
+
+# Create new routes for caregivers
+create_route "/caregivers/index"
+create_route "/caregivers/[id]"       # Dynamic route after static routes
+
+# Create new routes for carehomes
+create_route "/carehomes/index"
+create_route "/carehomes/[id]"
+
+# Create new routes for clients (domiciliary care)
+create_route "/clients/index"
+create_route "/clients/[id]"
+
+# Create new routes for requests
+create_route "/requests/index"
+create_route "/requests/[id]"
+create_route "/requests/[id]/match"
+
+# Create new routes for shifts
+create_route "/shifts/index"
+create_route "/shifts/[id]"       # Dynamic route after static routes
+create_route "/shifts/[id]/clockin"
+create_route "/shifts/[id]/clockout"
+
+# Create new routes for notifications
+create_route "/notifications/index"
+create_route "/notifications/[id]/read"
+
+# Create new routes for reports
+create_route "/reports/index"
+create_route "/reports/[id]"
+
+# Print completion message
 echo "All routes created successfully!"
-
-# Create service files
-echo "Creating service files..."
-touch "./lib/services/caregiver_service.dart" && echo "Created file: ./lib/services/caregiver_service.dart"
-touch "./lib/services/carehome_service.dart" && echo "Created file: ./lib/services/carehome_service.dart"
-touch "./lib/services/client_service.dart" && echo "Created file: ./lib/services/client_service.dart"
-touch "./lib/services/request_service.dart" && echo "Created file: ./lib/services/request_service.dart"
-touch "./lib/services/shift_service.dart" && echo "Created file: ./lib/services/shift_service.dart"
-touch "./lib/services/notification_service.dart" && echo "Created file: ./lib/services/notification_service.dart"
-touch "./lib/services/report_service.dart" && echo "Created file: ./lib/services/report_service.dart"
-echo "Service files created successfully!"
-
-# Create utility files
-echo "Creating utility files..."
-touch "./lib/utils/firestore_helper.dart" && echo "Created file: ./lib/utils/firestore_helper.dart"
-touch "./lib/utils/auth_helper.dart" && echo "Created file: ./lib/utils/auth_helper.dart"
-touch "./lib/utils/notification_helper.dart" && echo "Created file: ./lib/utils/notification_helper.dart"
-echo "Utility files created successfully!"
-
-# Create middleware file
-echo "Creating middleware file..."
-touch "./lib/middleware/auth_middleware.dart" && echo "Created file: ./lib/middleware/auth_middleware.dart"
-echo "Middleware file created successfully!"
-
-# Create main.dart file
-echo "Creating main.dart file..."
-touch "./lib/main.dart" && echo "Created file: ./lib/main.dart"
-echo "main.dart file created successfully!"
-
-# Create test files
-echo "Creating test files..."
-touch "./test/models/example_test.dart" && echo "Created file: ./test/models/example_test.dart"
-touch "./test/services/example_test.dart" && echo "Created file: ./test/services/example_test.dart"
-touch "./test/routes/example_test.dart" && echo "Created file: ./test/routes/example_test.dart"
-touch "./test/utils/example_test.dart" && echo "Created file: ./test/utils/example_test.dart"
-echo "Test files created successfully!"
-
-echo "Project structure created successfully!"
