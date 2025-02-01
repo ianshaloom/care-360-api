@@ -23,13 +23,13 @@ Future<Response> onRequest(RequestContext context, String id) {
 
 Future<Response> _get(RequestContext context, String id) async {
   try {
-    final repo = context.read<CaregiverService>();
+    final repo = context.read<CareGiverService>();
 
     //  failure n result
     Failure failure = EmptyFailure(errorMessage: '');
 
     // List of caregivers maps
-    var careGiver = CaregiverModel.empty();
+    var careGiver = CareGiverModel.empty();
 
     final response = await repo.getCaregiver(id);
 
@@ -47,7 +47,7 @@ Future<Response> _get(RequestContext context, String id) async {
       );
     }
 
-    return Response.json(body: careGiver.toSnapshot());
+    return Response.json(body: careGiver.toJson());
   } catch (e) {
     return Response(
       statusCode: HttpStatus.internalServerError,
@@ -58,7 +58,7 @@ Future<Response> _get(RequestContext context, String id) async {
 
 Future<Response> _delete(RequestContext context, String id) async {
   try {
-    final repo = context.read<CaregiverService>();
+    final repo = context.read<CareGiverService>();
 
     //  failure n result
     Failure failure = EmptyFailure(errorMessage: '');
@@ -95,7 +95,7 @@ Future<Response> _delete(RequestContext context, String id) async {
 
 Future<Response> _patch(RequestContext context, String id) async {
   try {
-    final repo = context.read<CaregiverService>();
+    final repo = context.read<CareGiverService>();
     final data = await context.request.json() as Map<String, dynamic>;
 
     //  failure n result
@@ -103,7 +103,7 @@ Future<Response> _patch(RequestContext context, String id) async {
     var success = '';
 
     final response = await repo.updateCaregiver(
-      CaregiverModel.fromSnapshot(data),
+      CareGiverModel.fromSnapshot(data),
     );
 
     response.fold(

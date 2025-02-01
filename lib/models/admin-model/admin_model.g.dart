@@ -7,22 +7,41 @@ part of 'admin_model.dart';
 // **************************************************************************
 
 AdminModel _$AdminModelFromJson(Map<String, dynamic> json) => AdminModel(
-      adminId: json['adminId'] as String,
       uid: json['uid'] as String,
-      name: json['name'] as String,
+      fullname: json['fullname'] as String,
+      email: json['email'] as String,
       phone: json['phone'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      profileImage: json['profileImage'] as String?,
+      notificationToken: json['notificationToken'] as String?,
+      role: json['role'] as String? ?? 'user',
+      createdAt: (json['createdAt'] as Timestamp).toDateTime(),
       updatedAt: json['updatedAt'] == null
           ? null
-          : DateTime.parse(json['updatedAt'] as String),
+          : (json['updatedAt'] as Timestamp).toDateTime(),
     );
 
 Map<String, dynamic> _$AdminModelToJson(AdminModel instance) =>
     <String, dynamic>{
-      'adminId': instance.adminId,
+      'role': instance.role,
       'uid': instance.uid,
-      'name': instance.name,
+      'fullname': instance.fullname,
+      'email': instance.email,
       'phone': instance.phone,
+      'profileImage': instance.profileImage,
+      'notificationToken': instance.notificationToken,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+    };
+
+Map<String, dynamic> _$AdminModelToDoc(AdminModel instance) =>
+    <String, dynamic>{
+      'role': instance.role,
+      'uid': instance.uid,
+      'fullname': instance.fullname,
+      'email': instance.email,
+      'phone': instance.phone,
+      'profileImage': instance.profileImage,
+      'notificationToken': instance.notificationToken,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };

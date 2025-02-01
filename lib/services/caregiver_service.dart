@@ -5,14 +5,14 @@ import 'package:care360/utils/firestore_helper.dart';
 import 'package:dartz/dartz.dart';
 
 /// Service class for managing caregiver-related operations.
-class CaregiverService {
-  /// Constructor for [CaregiverService].
-  CaregiverService(this._firestoreHelper);
+class CareGiverService {
+  /// Constructor for [CareGiverService].
+  CareGiverService(this._firestoreHelper);
 
   final FirestoreHelper _firestoreHelper;
 
   /// Fetches a caregiver by their unique ID.
-  Future<Either<Failure, CaregiverModel>> getCaregiver(
+  Future<Either<Failure, CareGiverModel>> getCaregiver(
     String caregiverId,
   ) async {
     try {
@@ -21,7 +21,7 @@ class CaregiverService {
       if (snapshot.isEmpty) {
         throw Exception('Caregiver not found');
       }
-      return Right(CaregiverModel.fromSnapshot(snapshot));
+      return Right(CareGiverModel.fromSnapshot(snapshot));
     } catch (e) {
       return Left(
         GevericFailure(
@@ -32,13 +32,13 @@ class CaregiverService {
   }
 
   /// Fetches all caregivers from Firestore.
-  Future<Either<Failure, List<CaregiverModel>>> getAllCaregivers() async {
+  Future<Either<Failure, List<CareGiverModel>>> getAllCaregivers() async {
     try {
       final snapshot =
           await _firestoreHelper.getCollection(caregiverCollection);
 
       final caregivers = snapshot.docs
-          .map((doc) => CaregiverModel.fromSnapshot(doc.data()))
+          .map((doc) => CareGiverModel.fromSnapshot(doc.data()))
           .toList();
       return Right(caregivers);
     } catch (e) {
@@ -52,15 +52,17 @@ class CaregiverService {
 
   /// Creates a new caregiver in Firestore.
   Future<Either<Failure, String>> createCaregiver(
-    CaregiverModel caregiver,
+    CareGiverModel caregiver,
   ) async {
     try {
-      final caregiverData = caregiver.toSnapshot();
+      final caregiverData = caregiver.toDoc();
+
       final caregiverId = await _firestoreHelper.addDocument(
         caregiverCollection,
         caregiverData,
         documentId: caregiver.caregiverId,
       );
+
       return Right(caregiverId);
     } catch (e) {
       return Left(
@@ -73,10 +75,10 @@ class CaregiverService {
 
   /// Updates an existing caregiver in Firestore.
   Future<Either<Failure, String>> updateCaregiver(
-    CaregiverModel caregiver,
+    CareGiverModel caregiver,
   ) async {
     try {
-      final caregiverData = caregiver.toSnapshot();
+      final caregiverData = caregiver.toJson();
 
       await _firestoreHelper.updateDocument(
         caregiverCollection,

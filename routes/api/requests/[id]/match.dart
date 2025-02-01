@@ -1,9 +1,63 @@
+import 'dart:io';
+
+import 'package:care360/errors/failure_n_success.dart';
+import 'package:care360/models/request-model/request_model.dart';
+import 'package:care360/services/request_service.dart';
 import 'package:dart_frog/dart_frog.dart';
 
-Response onRequest(
-  RequestContext context,
-  String id,
-) {
-  // TODO: implement route handler
-  return Response(body: 'This is a new route!');
+/// Handles matching of caregivers to requests.
+/// API endpoint: GET /api/requests/:id/match
+
+Future<Response> onRequest(RequestContext context, String id) {
+  switch (context.request.method) {
+    case HttpMethod.get:
+    case HttpMethod.post:
+      return _post(context, id);
+    case HttpMethod.put:
+    case HttpMethod.delete:
+    case HttpMethod.patch:
+    case HttpMethod.head:
+    case HttpMethod.options:
+      return Future.value(Response(statusCode: HttpStatus.methodNotAllowed));
+  }
+}
+
+Future<Response> _post(RequestContext context, String id) async {
+  try {
+    final data = await context.request.json() as Map<String, dynamic>;
+    final repo = context.read<RequestService>();
+
+    // Failure object
+    Failure failure = EmptyFailure(errorMessage: '');
+    var success = '';
+
+    final response = await repo.matchRequestWithCaregiver(
+      RequestModel.fromSnapshot(data),
+    );
+
+    response.fold(
+      (f) => failure = f,
+      (s) => success = s,
+    );
+
+    if (failure.errorMessage.isNotEmpty) {
+      final error = failure.errorMessage;
+
+      return Response.json(
+        statusCode: HttpStatus.internalServerError,
+        body: {'error': error},
+      );
+    }
+
+    return Response.json(
+      body: {
+        'message': 'Shift created successfully {$success}',
+      },
+    );
+  } catch (e) {
+    return Response(
+      statusCode: HttpStatus.internalServerError,
+      body: e.toString(),
+    );
+  }
 }

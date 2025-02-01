@@ -1,3 +1,5 @@
+import 'package:care360/utils/timestamp_helper.dart';
+import 'package:dart_firebase_admin/firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'care_giver_model.g.dart';
@@ -5,42 +7,55 @@ part 'care_giver_model.g.dart';
 /// CaregiverModel class
 /// Represents a caregiver in the system.
 @JsonSerializable()
-class CaregiverModel {
-  /// Constructor for [CaregiverModel]
-  CaregiverModel({
-    required this.caregiverId,
+class CareGiverModel {
+  /// Constructor for [CareGiverModel]
+  CareGiverModel(
+    this.address, {
     required this.uid,
-    required this.name,
-    required this.phone,
-    required this.qualifications,
-    // required this.preferredCareTypes,
-    required this.availability,
-    required this.assignedShifts,
-    required this.registeredCode,
+    required this.fullname,
+    required this.email,
     required this.createdAt,
+    this.profileImage,
+    this.notificationToken,
+    this.caregiverId = '',
+    this.phone = '',
+    this.qualifications = const [],
+    this.preferredCareTypes = const [],
+    this.availability = const [],
+    this.assignedShifts = const [],
+    this.registeredCode = '',
     this.updatedAt,
+    this.isAvailable = true,
   });
 
-  /// Static function to create an empty [CaregiverModel]
-  CaregiverModel.empty()
+  /// Static function to create an empty [CareGiverModel]
+  CareGiverModel.empty()
       : caregiverId = '',
         uid = '',
-        name = '',
+        fullname = '',
+        email = '',
         phone = '',
+        address = '',
+        profileImage = '',
+        notificationToken = '',
         qualifications = [],
-        // preferredCareTypes = [],
+        preferredCareTypes = [],
         availability = [],
         assignedShifts = [],
         registeredCode = '',
         createdAt = DateTime.now(),
-        updatedAt = DateTime.now();
+        updatedAt = DateTime.now(),
+        isAvailable = false;
 
-  /// Static function to create [CaregiverModel] from a Firestore snapshot
-  factory CaregiverModel.fromSnapshot(Map<String, dynamic> json) =>
-      _$CaregiverModelFromJson(json);
+  /// Static function to create [CareGiverModel] from a Firestore snapshot
+  factory CareGiverModel.fromSnapshot(Map<String, dynamic> json) =>
+      _$CareGiverModelFromJson(json);
 
-  /// Convert [CaregiverModel] to a Firestore-compatible map
-  Map<String, dynamic> toSnapshot() => _$CaregiverModelToJson(this);
+  /// Convert [CareGiverModel] to a Firestore-compatible map
+  Map<String, dynamic> toJson() => _$CareGiverModelToJson(this);
+
+  /// Convert [CareGiverModel] to a Firestore-compatible map
+  Map<String, dynamic> toDoc() => _$CareGiverModelToDoc(this);
 
   /// Unique identifier for the caregiver
   final String caregiverId;
@@ -49,16 +64,28 @@ class CaregiverModel {
   final String uid;
 
   /// Full name of the caregiver
-  final String name;
+  final String fullname;
+
+  ///  Email Address of the admin
+  final String email;
 
   /// Contact phone number of the caregiver
   final String phone;
+
+  /// Address of the caregiver
+  final String address;
+
+  /// Profile Image URL of the caregiver
+  final String? profileImage;
+
+  /// Notification Token of the caregiver
+  final String? notificationToken;
 
   /// List of qualifications the caregiver possesses
   final List<String> qualifications;
 
   /// List of preferred care types the caregiver can provide
-  // final List<String> preferredCareTypes;
+  final List<String> preferredCareTypes;
 
   /// List of days/times the caregiver is available
   final List<String> availability;
@@ -75,18 +102,23 @@ class CaregiverModel {
   /// Timestamp when the caregiver was last updated
   final DateTime? updatedAt;
 
+  /// Is the caregiver available for the shift
+  final bool isAvailable;
+
   /// List of CaregiverModel objects to a list of Firestore-compatible maps
-  static List<Map<String, dynamic>> listToSnapshot(List<CaregiverModel> list) {
-    return list.map((e) => e.toSnapshot()).toList();
+  static List<Map<String, dynamic>> listToSnapshot(List<CareGiverModel> list) {
+    return list.map((e) => e.toJson()).toList();
   }
 
   /// Override toString method for better logging and debugging
   @override
   String toString() {
-    return 'CaregiverModel{caregiverId: $caregiverId, uid: $uid, '
-        'name: $name, phone: $phone,'
+    return '\nCaregiverModel { caregiverId: $caregiverId, uid: $uid, '
+        'name: $fullname, email: $email, phone: $phone, address: $address,'
         ' qualifications: $qualifications, availability: $availability,'
         ' assignedShifts: $assignedShifts, registeredCode: $registeredCode,'
-        ' createdAt: $createdAt, updatedAt: $updatedAt}';
+        ' createdAt: $createdAt, notificationToken: $notificationToken,'
+        ' updatedAt: $updatedAt, profileImage: $profileImage,'
+        ' isAvailable: $isAvailable }\n';
   }
 }

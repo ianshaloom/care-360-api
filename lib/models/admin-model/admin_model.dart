@@ -1,3 +1,5 @@
+import 'package:care360/utils/timestamp_helper.dart';
+import 'package:dart_firebase_admin/firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'admin_model.g.dart';
@@ -8,20 +10,26 @@ part 'admin_model.g.dart';
 class AdminModel {
   /// Constructor for [AdminModel]
   AdminModel({
-    required this.adminId,
     required this.uid,
-    required this.name,
+    required this.fullname,
+    required this.email,
     required this.phone,
     required this.createdAt,
+    this.profileImage,
+    this.notificationToken,
+    this.role = 'user',
     this.updatedAt,
   });
 
   /// Static function to create an empty [AdminModel]
   AdminModel.empty()
-      : adminId = '',
+      : role = '',
         uid = '',
-        name = '',
+        fullname = '',
+        email = '',
         phone = '',
+        profileImage = '',
+        notificationToken = '',
         createdAt = DateTime.now(),
         updatedAt = DateTime.now();
 
@@ -30,19 +38,31 @@ class AdminModel {
       _$AdminModelFromJson(json);
 
   /// Convert [AdminModel] to a Firestore-compatible map
-  Map<String, dynamic> toSnapshot() => _$AdminModelToJson(this);
+  Map<String, dynamic> toJson() => _$AdminModelToJson(this);
 
-  /// Unique identifier for the admin
-  final String adminId;
+  /// Convert [AdminModel] to a Firestore-compatible map
+  Map<String, dynamic> toDoc() => _$AdminModelToDoc(this);
+
+  /// Role of the admin
+  final String role;
 
   /// Firebase Authentication UID linked to the admin
   final String uid;
 
   /// Full name of the admin
-  final String name;
+  final String fullname;
+
+  ///  Email Address of the admin
+  final String email;
 
   /// Contact phone number of the admin
   final String phone;
+
+  /// Profile Image URL of the admin
+  final String? profileImage;
+
+  /// Notification Token of the admin
+  final String? notificationToken;
 
   /// Timestamp when the admin was created
   final DateTime createdAt;
@@ -53,7 +73,9 @@ class AdminModel {
   /// Override toString method for better logging and debugging
   @override
   String toString() {
-    return 'AdminModel{adminId: $adminId, uid: $uid, name: $name, phone: $phone,'
-        ' createdAt: $createdAt, updatedAt: $updatedAt}';
+    return '\nAdminModel { role: $role, uid: $uid, fullname: $fullname, '
+        'email: $email, phone: $phone, createdAt: $createdAt, '
+        'updatedAt: $updatedAt, profileImage: $profileImage,'
+        ' notificationToken: $notificationToken }\n';
   }
 }

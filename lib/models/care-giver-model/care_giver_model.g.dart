@@ -6,38 +6,76 @@ part of 'care_giver_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CaregiverModel _$CaregiverModelFromJson(Map<String, dynamic> json) =>
-    CaregiverModel(
-      caregiverId: json['caregiverId'] as String,
+CareGiverModel _$CareGiverModelFromJson(Map<String, dynamic> json) =>
+    CareGiverModel(
+      json['address'] as String,
       uid: json['uid'] as String,
-      name: json['name'] as String,
-      phone: json['phone'] as String,
-      qualifications: (json['qualifications'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      availability: (json['availability'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      assignedShifts: (json['assignedShifts'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      registeredCode: json['registeredCode'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      fullname: json['fullname'] as String,
+      email: json['email'] as String,
+      profileImage: json['profileImage'] as String?,
+      notificationToken: json['notificationToken'] as String?,
+      caregiverId: json['caregiverId'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      qualifications: (json['qualifications'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      preferredCareTypes: (json['preferredCareTypes'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      availability: (json['availability'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      assignedShifts: (json['assignedShifts'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      isAvailable: json['isAvailable'] as bool? ?? true,
+      registeredCode: json['registeredCode'] as String? ?? '',
+      createdAt: (json['createdAt'] as Timestamp).toDateTime(),
       updatedAt: json['updatedAt'] == null
           ? null
-          : DateTime.parse(json['updatedAt'] as String),
+          : (json['updatedAt'] as Timestamp).toDateTime(),
     );
 
-Map<String, dynamic> _$CaregiverModelToJson(CaregiverModel instance) =>
+Map<String, dynamic> _$CareGiverModelToJson(CareGiverModel instance) =>
     <String, dynamic>{
       'caregiverId': instance.caregiverId,
       'uid': instance.uid,
-      'name': instance.name,
+      'fullname': instance.fullname,
+      'email': instance.email,
       'phone': instance.phone,
+      'address': instance.address,
+      'profileImage': instance.profileImage,
+      'notificationToken': instance.notificationToken,
       'qualifications': instance.qualifications,
+      'preferredCareTypes': instance.preferredCareTypes,
       'availability': instance.availability,
       'assignedShifts': instance.assignedShifts,
       'registeredCode': instance.registeredCode,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'isAvailable': instance.isAvailable,
+    };
+
+Map<String, dynamic> _$CareGiverModelToDoc(CareGiverModel instance) =>
+    <String, dynamic>{
+      'caregiverId': instance.caregiverId,
+      'uid': instance.uid,
+      'fullname': instance.fullname,
+      'email': instance.email,
+      'phone': instance.phone,
+      'address': instance.address,
+      'profileImage': instance.profileImage,
+      'notificationToken': instance.notificationToken,
+      'qualifications': instance.qualifications,
+      'preferredCareTypes': instance.preferredCareTypes,
+      'availability': instance.availability,
+      'assignedShifts': instance.assignedShifts,
+      'registeredCode': instance.registeredCode,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'isAvailable': instance.isAvailable,
     };

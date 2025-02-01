@@ -22,7 +22,7 @@ Future<Response> onRequest(RequestContext context) {
 
 Future<Response> _get(RequestContext context) async {
   try {
-    final repo = context.read<CaregiverService>();
+    final repo = context.read<CareGiverService>();
 
     //  failure n result
     Failure failure = EmptyFailure(errorMessage: '');
@@ -34,7 +34,7 @@ Future<Response> _get(RequestContext context) async {
 
     response.fold(
       (f) => failure = f,
-      (s) => careGivers = CaregiverModel.listToSnapshot(s),
+      (s) => careGivers = CareGiverModel.listToSnapshot(s),
     );
 
     if (failure.errorMessage.isNotEmpty) {
@@ -57,7 +57,7 @@ Future<Response> _get(RequestContext context) async {
 
 Future<Response> _post(RequestContext context) async {
   try {
-    final repo = context.read<CaregiverService>();
+    final repo = context.read<CareGiverService>();
     final data = await context.request.json() as Map<String, dynamic>;
 
     // failure n result
@@ -65,7 +65,7 @@ Future<Response> _post(RequestContext context) async {
     var success = '';
 
     final response = await repo.createCaregiver(
-      CaregiverModel.fromSnapshot(data),
+      CareGiverModel.fromSnapshot(data),
     );
 
     response.fold(
@@ -84,7 +84,7 @@ Future<Response> _post(RequestContext context) async {
 
     return Response.json(
       body: {
-        'message': 'Caregiver deleted successfully {$success}',
+        'message': 'Caregiver created successfully {$success}',
       },
     );
   } catch (e) {

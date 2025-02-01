@@ -85,4 +85,48 @@ class FirestoreHelper {
 
     return query.get();
   }
+
+  /// Runs a query on a Firestore collection with multiple filters.
+  Future<QuerySnapshot<Map<String, Object?>>>
+      queryCollectionWithMultipleFilters(
+    String collection, {
+    List<String>? fields,
+    List<WhereFilter>? filters,
+    List<dynamic>? values,
+    int? limit,
+    String? orderByField,
+    bool? descending,
+  }) async {
+    Query<Map<String, Object?>> query = _firestore.collection(collection);
+
+    // Add where clause
+    if (fields != null && filters != null) {
+      for (var i = 0; i < fields.length; i++) {
+        query = query.where(fields[i], filters[i], values![i]);
+      }
+      /*query = query
+          .where(
+            fields[0],
+            filters[0],
+            values![0],
+          )
+          .where(
+            fields[1],
+            filters[1],
+            values[1],
+          );*/
+    }
+
+    // Add orderBy clause
+    if (orderByField != null) {
+      query = query.orderBy(orderByField, descending: descending ?? false);
+    }
+
+    // Add limit
+    if (limit != null) {
+      query = query.limit(limit);
+    }
+
+    return query.get();
+  }
 }

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:care360/errors/failure_n_success.dart';
-import 'package:care360/services/shift_service.dart';
+import 'package:care360/services/request_service.dart';
 import 'package:dart_frog/dart_frog.dart';
 
 /// Handles matching of caregivers to requests.
@@ -11,33 +11,25 @@ Future<Response> onRequest(RequestContext context, String id) {
   switch (context.request.method) {
     case HttpMethod.get:
     case HttpMethod.post:
+      return _post(context, id);
     case HttpMethod.put:
     case HttpMethod.delete:
     case HttpMethod.patch:
-      return _patch(context, id);
     case HttpMethod.head:
     case HttpMethod.options:
       return Future.value(Response(statusCode: HttpStatus.methodNotAllowed));
   }
 }
 
-Future<Response> _patch(RequestContext context, String id) async {
+Future<Response> _post(RequestContext context, String id) async {
   try {
-    final repo = context.read<ShiftService>();
-    final data = context.request.body() as Map<String, dynamic>;
-
-    final clockIn = data['clockInTime'] as String;
-    final location = data['clockInLocation'] as Map<String, double>;
+    final repo = context.read<RequestService>();
 
     // Failure object
     Failure failure = EmptyFailure(errorMessage: '');
     var success = '';
 
-    final response = await repo.clockInCaregiver(
-      id,
-      clockInTime: clockIn,
-      clockInLocation: location,
-    );
+    final response = await repo.floatRequest(id);
 
     response.fold(
       (f) => failure = f,

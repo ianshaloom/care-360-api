@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:care360/errors/failure_n_success.dart';
-import 'package:care360/models/shift-model/shift_model.dart';
-import 'package:care360/services/shift_service.dart';
+import 'package:care360/models/admin-model/admin_model.dart';
+import 'package:care360/services/admin_service.dart';
 import 'package:dart_frog/dart_frog.dart';
 
 Future<Response> onRequest(RequestContext context, String id) {
@@ -23,19 +23,19 @@ Future<Response> onRequest(RequestContext context, String id) {
 
 Future<Response> _get(RequestContext context, String id) async {
   try {
-    final repo = context.read<ShiftService>();
+    final repo = context.read<AdminService>();
 
     // Failure and result
     Failure failure = EmptyFailure(errorMessage: '');
 
-    // Shift model
-    var shift = ShiftModel.empty();
+    // Admin object
+    var admin = AdminModel.empty();
 
-    final response = await repo.getShift(id);
+    final response = await repo.getAdmin(id);
 
     response.fold(
       (f) => failure = f,
-      (s) => shift = s,
+      (s) => admin = s,
     );
 
     if (failure.errorMessage.isNotEmpty) {
@@ -47,7 +47,7 @@ Future<Response> _get(RequestContext context, String id) async {
       );
     }
 
-    return Response.json(body: shift.toJson());
+    return Response.json(body: admin.toJson());
   } catch (e) {
     return Response(
       statusCode: HttpStatus.internalServerError,
@@ -58,13 +58,13 @@ Future<Response> _get(RequestContext context, String id) async {
 
 Future<Response> _delete(RequestContext context, String id) async {
   try {
-    final repo = context.read<ShiftService>();
+    final repo = context.read<AdminService>();
 
     // Failure and result
     Failure failure = EmptyFailure(errorMessage: '');
     var success = '';
 
-    final response = await repo.deleteShift(id);
+    final response = await repo.deleteAdmin(id);
 
     response.fold(
       (f) => failure = f,
@@ -82,7 +82,7 @@ Future<Response> _delete(RequestContext context, String id) async {
 
     return Response.json(
       body: {
-        'message': 'Shift deleted successfully {$success}',
+        'message': 'Admin deleted successfully {$success}',
       },
     );
   } catch (e) {
@@ -95,15 +95,15 @@ Future<Response> _delete(RequestContext context, String id) async {
 
 Future<Response> _patch(RequestContext context, String id) async {
   try {
-    final repo = context.read<ShiftService>();
+    final repo = context.read<AdminService>();
     final data = await context.request.json() as Map<String, dynamic>;
 
     // Failure and result
     Failure failure = EmptyFailure(errorMessage: '');
     var success = '';
 
-    final response = await repo.updateShift(
-      ShiftModel.fromSnapshot(data),
+    final response = await repo.updateAdmin(
+      AdminModel.fromSnapshot(data),
     );
 
     response.fold(
@@ -122,7 +122,7 @@ Future<Response> _patch(RequestContext context, String id) async {
 
     return Response.json(
       body: {
-        'message': 'Shift updated successfully {$success}',
+        'message': 'Admin updated successfully {$success}',
       },
     );
   } catch (e) {

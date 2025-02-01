@@ -16,3 +16,9 @@ build.zip
 # Test related files
 coverage/
 dev_keys.dart
+
+# environment configuration
+.env
+service-account.json
+lib/main.dart
+templates/

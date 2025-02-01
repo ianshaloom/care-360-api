@@ -1,4 +1,6 @@
+import 'package:care360/models/request-model/request_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'notification_model.g.dart';
 
@@ -16,6 +18,19 @@ class NotificationModel {
     required this.relatedEntityId,
     required this.createdAt,
   });
+
+  /// Notification Model from Request Model
+  factory NotificationModel.fromRequestModel(RequestModel requestModel) {
+    return NotificationModel(
+      notificationId: requestModel.careHomeId,
+      uid: const Uuid().v4(),
+      message: 'New request from ${requestModel.careHomeId}',
+      type: 'request',
+      read: false,
+      relatedEntityId: requestModel.requestId,
+      createdAt: DateTime.now(),
+    );
+  }
 
   /// Static function to create an empty [NotificationModel]
   NotificationModel.empty()

@@ -1,11 +1,13 @@
-import 'package:care360/services/caregiver_service.dart';
+import 'package:care360/services/shift_service.dart';
 import 'package:care360/utils/firestore_helper.dart';
+import 'package:care360/utils/messaging_helper.dart';
 import 'package:dart_firebase_admin/dart_firebase_admin.dart';
 import 'package:dart_firebase_admin/firestore.dart';
+import 'package:dart_firebase_admin/messaging.dart';
 import 'package:dart_frog/dart_frog.dart';
 
-/// Middleware to inject the CaregiverService into the request context.
-Middleware caregiverServiceMiddleware() {
+/// Middleware to inject the ShiftService into the request context.
+Middleware shiftServiceMiddleware() {
   return (handler) {
     return (context) async {
       // Get the Firebase Admin instance from the request context
@@ -13,14 +15,16 @@ Middleware caregiverServiceMiddleware() {
 
       // Firestore initialization
       final firestore = Firestore(admin);
+      final messaging = Messaging(admin);
 
-      // Initialize FirestoreHelper and CaregiverService
+      // Initialize FirestoreHelper and ShiftService
       final firestoreHelper = FirestoreHelper(firestore);
-      final caregiverService = CareGiverService(firestoreHelper);
+      final messagingHelper = MessagingHelper(messaging);
+
+      final shiftService = ShiftService(firestoreHelper, messagingHelper);
 
       // Inject the service into the request context
-      final newContext =
-          context.provide<CareGiverService>(() => caregiverService);
+      final newContext = context.provide<ShiftService>(() => shiftService);
 
       // Pass the request to the next handler
       return handler(newContext);

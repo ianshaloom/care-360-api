@@ -1,3 +1,5 @@
+import 'package:care360/utils/timestamp_helper.dart';
+import 'package:dart_firebase_admin/firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'care_home_model.g.dart';
@@ -10,11 +12,14 @@ class CareHomeModel {
   CareHomeModel({
     required this.careHomeId,
     required this.uid,
-    required this.name,
+    required this.fullname,
+    required this.email,
     required this.address,
     required this.phone,
     required this.requests,
     required this.createdAt,
+    this.profileImage,
+    this.notificationToken,
     this.updatedAt,
   });
 
@@ -22,9 +27,12 @@ class CareHomeModel {
   CareHomeModel.empty()
       : careHomeId = '',
         uid = '',
-        name = '',
+        fullname = '',
+        email = '',
         address = '',
         phone = '',
+        profileImage = '',
+        notificationToken = '',
         requests = [],
         createdAt = DateTime.now(),
         updatedAt = DateTime.now();
@@ -34,7 +42,10 @@ class CareHomeModel {
       _$CareHomeModelFromJson(json);
 
   /// Convert [CareHomeModel] to a Firestore-compatible map
-  Map<String, dynamic> toSnapshot() => _$CareHomeModelToJson(this);
+  Map<String, dynamic> toJson() => _$CareHomeModelToJson(this);
+
+  /// Convert [CareHomeModel] to a Firestore-compatible map
+  Map<String, dynamic> toDoc() => _$CareHomeModelToDoc(this);
 
   /// Unique identifier for the care home
   final String careHomeId;
@@ -43,13 +54,22 @@ class CareHomeModel {
   final String uid;
 
   /// Name of the care home
-  final String name;
+  final String fullname;
+
+  /// Email Address of the care home
+  final String email;
 
   /// Address of the care home
   final String address;
 
   /// Contact phone number of the care home
   final String phone;
+
+  /// Profile Image URL of the care home
+  final String? profileImage;
+
+  /// Notification Token of the care home
+  final String? notificationToken;
 
   /// List of request IDs associated with the care home
   final List<String> requests;
@@ -63,8 +83,10 @@ class CareHomeModel {
   /// Override toString method for better logging and debugging
   @override
   String toString() {
-    return 'CareHomeModel{careHomeId: $careHomeId, uid: $uid, name: $name,'
-        ' address: $address, phone: $phone, requests: $requests,'
-        ' createdAt: $createdAt, updatedAt: $updatedAt}';
+    return '\nCareHomeModel { careHomeId: $careHomeId, uid: $uid, name: $fullname,'
+        ' email: $email, address: $address, phone: $phone, requests: $requests,'
+        ' createdAt: $createdAt, updatedAt: $updatedAt, '
+        'profileImage: $profileImage, notificationToken: $notificationToken'
+        ' }\n';
   }
 }
