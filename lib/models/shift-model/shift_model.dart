@@ -18,6 +18,7 @@ class ShiftModel {
     required this.startTime,
     required this.endTime,
     required this.status,
+    required this.floatStatus,
     required this.notes,
     required this.createdAt,
     this.updatedAt,
@@ -37,6 +38,7 @@ class ShiftModel {
       startTime: request.shiftStartTime,
       endTime: request.shiftEndTime,
       status: ShiftStatus.scheduled,
+      floatStatus: FloatStatus.notFloated,
       notes: [request.additionalNotes],
       createdAt: request.createdAt,
       updatedAt: request.updatedAt ?? request.createdAt,
@@ -52,6 +54,7 @@ class ShiftModel {
         startTime = DateTime.now(),
         endTime = DateTime.now(),
         status = ShiftStatus.scheduled,
+        floatStatus = FloatStatus.notFloated,
         notes = [],
         createdAt = DateTime.now(),
         updatedAt = DateTime.now(),
@@ -80,6 +83,7 @@ class ShiftModel {
       'startTime': startTime.toIso8601String(),
       'endTime': endTime.toIso8601String(),
       'status': status.value,
+      'floatStatus': floatStatus.value,
       'notes': notes.join('---'),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String() ?? '',
@@ -103,6 +107,7 @@ class ShiftModel {
     DateTime? startTime,
     DateTime? endTime,
     ShiftStatus? status,
+    FloatStatus? floatStatus,
     List<String>? notes,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -119,6 +124,7 @@ class ShiftModel {
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       status: status ?? this.status,
+      floatStatus: floatStatus ?? this.floatStatus,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -150,6 +156,9 @@ class ShiftModel {
   /// Status of the shift (e.g., "scheduled", "in-progress", "completed")
   final ShiftStatus status;
 
+  /// Status of the float request shift
+  final FloatStatus floatStatus;
+
   /// List of notes or instructions for the shift
   final List<String> notes;
 
@@ -178,7 +187,7 @@ class ShiftModel {
         ' clientId: $clientId, careHomeId: $careHomeId,'
         ' startTime: $startTime,'
         ' endTime: $endTime, status: $status, notes: $notes,'
-        ' createdAt: $createdAt,'
+        ' createdAt: $createdAt, floatStatus: $floatStatus,'
         ' updatedAt: $updatedAt, clockInTime: $clockInTime,'
         ' clockOutTime: $clockOutTime,'
         ' clockInLocation: $clockInLocation, '
@@ -240,6 +249,50 @@ extension StringToShiftStatus on String {
         return ShiftStatus.cancelled;
       default:
         return ShiftStatus.scheduled;
+    }
+  }
+}
+
+/// Enum for the status of a float request shift
+enum FloatStatus {
+  /// Shift is floated successfully
+  floating,
+
+  /// Shift is not floated
+  notFloated,
+
+  /// Shift floated and picked by a caregiver
+  picked,
+}
+
+/// Extension method to convert a [FloatStatus] to a string
+extension FloatStatusExtension on FloatStatus {
+  /// Convert a [FloatStatus] to a string
+  String get value {
+    switch (this) {
+      case FloatStatus.floating:
+        return 'floating';
+      case FloatStatus.notFloated:
+        return 'not-floated';
+      case FloatStatus.picked:
+        return 'picked';
+    }
+  }
+}
+
+/// Extension method to convert a string to a [FloatStatus]
+extension StringToFloatStatus on String {
+  /// Convert a string to a [FloatStatus]
+  FloatStatus get toFloatStatus {
+    switch (this) {
+      case 'floating':
+        return FloatStatus.floating;
+      case 'not-floated':
+        return FloatStatus.notFloated;
+      case 'picked':
+        return FloatStatus.picked;
+      default:
+        return FloatStatus.notFloated;
     }
   }
 }

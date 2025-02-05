@@ -17,11 +17,40 @@ class FirestoreHelper {
     return snapshot.data() ?? {};
   }
 
+  /// Fetches a single document from a Referenced Firestore sub-collection.
+  Future<Map<String, dynamic>> getSubDocument(
+    String collection,
+    String documentId,
+    String subCollection,
+    String subDocId,
+  ) async {
+    final snapshot = await _firestore
+        .collection(collection)
+        .doc(documentId)
+        .collection(subCollection)
+        .doc(subDocId)
+        .get();
+    return snapshot.data() ?? {};
+  }
+
   /// Fetches all documents from a Firestore collection.
   Future<QuerySnapshot<Map<String, Object?>>> getCollection(
     String collection,
   ) async {
     return _firestore.collection(collection).get();
+  }
+
+  /// Fetch all documents from a Referenced Firestore sub-collection.
+  Future<QuerySnapshot<Map<String, Object?>>> getSubCollection(
+    String collection,
+    String documentId,
+    String subCollection,
+  ) async {
+    return _firestore
+        .collection(collection)
+        .doc(documentId)
+        .collection(subCollection)
+        .get();
   }
 
   /// Adds a new document to a Firestore collection.
@@ -39,6 +68,22 @@ class FirestoreHelper {
     return docRef.id;
   }
 
+  /// Add a new document to a Referenced Firestore sub-collection.
+  Future<void> addSubDocument(
+    String collection,
+    String documentId,
+    String subCollection,
+    Map<String, dynamic> data, {
+    String? subDocId,
+  }) async {
+    final docRef = await _firestore
+        .collection(collection)
+        .doc(documentId)
+        .collection(subCollection)
+        .doc(subDocId)
+        .set(data);
+  }
+
   /// Updates an existing document in Firestore.
   Future<void> updateDocument(
     String collection,
@@ -48,12 +93,43 @@ class FirestoreHelper {
     await _firestore.collection(collection).doc(documentId).update(data);
   }
 
+  /// Updates an existing document in a Referenced Firestore sub-collection.
+  Future<void> updateSubDocument(
+    String collection,
+    String documentId,
+    String subCollection,
+    String subDocId,
+    Map<String, dynamic> data,
+  ) async {
+    await _firestore
+        .collection(collection)
+        .doc(documentId)
+        .collection(subCollection)
+        .doc(subDocId)
+        .update(data);
+  }
+
   /// Deletes a document from Firestore.
   Future<void> deleteDocument(
     String collection,
     String documentId,
   ) async {
     await _firestore.collection(collection).doc(documentId).delete();
+  }
+
+  /// Deletes a document from a Referenced Firestore sub-collection.
+  Future<void> deleteSubDocument(
+    String collection,
+    String documentId,
+    String subCollection,
+    String subDocId,
+  ) async {
+    await _firestore
+        .collection(collection)
+        .doc(documentId)
+        .collection(subCollection)
+        .doc(subDocId)
+        .delete();
   }
 
   /// Runs a query on a Firestore collection.
@@ -104,17 +180,6 @@ class FirestoreHelper {
       for (var i = 0; i < fields.length; i++) {
         query = query.where(fields[i], filters[i], values![i]);
       }
-      /*query = query
-          .where(
-            fields[0],
-            filters[0],
-            values![0],
-          )
-          .where(
-            fields[1],
-            filters[1],
-            values[1],
-          );*/
     }
 
     // Add orderBy clause

@@ -27,12 +27,13 @@ Future<Response> _post(RequestContext context, String id) async {
 
     // access the careGiverId from the request query parameters
     final careGiverId = context.request.uri.queryParameters['careGiverId']!;
+    final shiftId = context.request.uri.queryParameters['shiftId']!;
 
     // Failure object
     Failure failure = EmptyFailure(errorMessage: '');
     var success = '';
 
-    final response = await repo.acceptRequest(id, careGiverId);
+    final response = await repo.acceptRequest(id, shiftId, careGiverId);
 
     response.fold(
       (f) => failure = f,

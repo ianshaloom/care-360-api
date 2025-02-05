@@ -9,7 +9,9 @@ import 'package:dart_frog/dart_frog.dart';
 FirebaseAdminApp? firebaseAdmin;
 
 Future<void> init(InternetAddress ip, int port) async {
-  print('\n.\n.\n.\n 🏁 Initializing Firebase Admin SDK... 🏁');
+  print(
+    '\n🏁 Initializing Firebase Admin SDK',
+  );
 
   // Initialize Firebase Admin SDK
   firebaseAdmin = FirebaseAdminApp.initializeApp(
@@ -20,7 +22,8 @@ Future<void> init(InternetAddress ip, int port) async {
   );
 
   print(
-      '\n.\n.\n.\n 🏁 🏁 Firebase Admin SDK initialized successfully! 🏁 🏁 \n.\n.\n.\n');
+    '\n 🏁 🏁 Firebase Admin SDK initialized successfully!',
+  );
 }
 
 Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
@@ -28,11 +31,12 @@ Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {
   final server = await serve(handler, ip, port);
 
   print(
-      '\n.\n.\n.\n 🏁 🏁 🏁 Server is running on ${server.address}:${server.port} 🏁 🏁 🏁 \n.\n.\n.\n');
+    '\n🏁 🏁 🏁 Server is running on ${server.address}:${server.port}...',
+  );
 
   // Listen for server shutdown and close Firebase Admin
   ProcessSignal.sigint.watch().listen((_) async {
-    print('\n.\n.\n.\n 🏁 🏁 Shutting down server... 🏁 🏁 \n.\n.\n.\n');
+    print('\n🏁 🏁 Shutting down server... 🏁 🏁 \n');
     await firebaseAdmin?.close();
     exit(0);
   });

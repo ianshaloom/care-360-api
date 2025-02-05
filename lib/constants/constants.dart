@@ -22,6 +22,12 @@ const String shiftCollection = 'shifts';
 /// firestore scheduled shifts collections
 const String scheduledShiftCollection = 'scheduled-shifts';
 
+/// firestore assignable shifts sub-collections
+const String assignableShiftCollection = 'assignable-shifts';
+
+/// firestore unassigned shifts collections
+const String unassignedShiftCollection = 'unassigned-shifts';
+
 /// firestore reports collections
 const String reportCollection = 'reports';
 

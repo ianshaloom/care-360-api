@@ -13,6 +13,7 @@ ShiftModel _$ShiftModelFromJson(Map<String, dynamic> json) => ShiftModel(
       clientId: json['clientId'] as String,
       careHomeId: json['careHomeId'] as String,
       status: $enumDecode(_$ShiftStatusEnumMap, json['status']),
+      floatStatus: $enumDecode(_$FloatStatusEnumMap, json['floatStatus']),
       notes: (json['notes'] as List<dynamic>).map((e) => e as String).toList(),
       clockInLocation: (json['clockInLocation'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, (e as num).toDouble()),
@@ -47,6 +48,7 @@ Map<String, dynamic> _$ShiftModelToDoc(ShiftModel instance) =>
       'startTime': instance.startTime,
       'endTime': instance.endTime,
       'status': _$ShiftStatusEnumMap[instance.status],
+      'floatStatus': _$FloatStatusEnumMap[instance.floatStatus],
       'notes': instance.notes,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
@@ -65,6 +67,7 @@ Map<String, dynamic> _$ShiftModelToJson(ShiftModel instance) =>
       'clientId': instance.clientId,
       'careHomeId': instance.careHomeId,
       'status': _$ShiftStatusEnumMap[instance.status],
+      'floatStatus': _$FloatStatusEnumMap[instance.floatStatus],
       'notes': instance.notes,
       'clockInLocation': instance.clockInLocation,
       'clockOutLocation': instance.clockOutLocation,
@@ -78,8 +81,14 @@ Map<String, dynamic> _$ShiftModelToJson(ShiftModel instance) =>
 
 const _$ShiftStatusEnumMap = {
   ShiftStatus.scheduled: 'scheduled',
-  ShiftStatus.inProgress: 'inProgress',
+  ShiftStatus.inProgress: 'in-progress',
   ShiftStatus.completed: 'completed',
   ShiftStatus.missed: 'missed',
   ShiftStatus.cancelled: 'cancelled',
+};
+
+const _$FloatStatusEnumMap = {
+  FloatStatus.notFloated: 'not-floated',
+  FloatStatus.floating: 'floating',
+  FloatStatus.picked: 'picked',
 };

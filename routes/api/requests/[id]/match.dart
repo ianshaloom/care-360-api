@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:care360/errors/failure_n_success.dart';
-import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/services/request_service.dart';
 import 'package:dart_frog/dart_frog.dart';
 
@@ -24,16 +23,13 @@ Future<Response> onRequest(RequestContext context, String id) {
 
 Future<Response> _post(RequestContext context, String id) async {
   try {
-    final data = await context.request.json() as Map<String, dynamic>;
     final repo = context.read<RequestService>();
 
     // Failure object
     Failure failure = EmptyFailure(errorMessage: '');
     var success = '';
 
-    final response = await repo.matchRequestWithCaregiver(
-      RequestModel.fromSnapshot(data),
-    );
+    final response = await repo.distributeShifts(id);
 
     response.fold(
       (f) => failure = f,

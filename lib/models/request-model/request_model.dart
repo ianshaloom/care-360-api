@@ -140,6 +140,7 @@ class RequestModel {
       startTime: shiftStartTime,
       endTime: shiftEndTime,
       status: ShiftStatus.scheduled,
+      floatStatus: FloatStatus.notFloated,
       notes: [additionalNotes],
       createdAt: DateTime.now(),
     );
@@ -157,6 +158,7 @@ class RequestModel {
     if ((repeatType == RepeatType.none) && (selectedDates != null)) {
       for (final date in selectedDates!) {
         final newShift = shift.copyWith(
+          shiftId: const Uuid().v4(),
           startTime: DateTime(
             date.year,
             date.month,
@@ -198,6 +200,7 @@ class RequestModel {
         final e = shiftEndTime.add(Duration(days: i));
 
         final newShift = shift.copyWith(
+          shiftId: const Uuid().v4(),
           startTime: DateTime(
             s.year,
             s.month,
@@ -233,6 +236,7 @@ class RequestModel {
 
       for (final date in repeatDates) {
         final newShift = shift.copyWith(
+          shiftId: const Uuid().v4(),
           startTime: _shiftDateTime(shiftStartTime, date),
           endTime: _shiftDateTime(shiftEndTime, date),
         );

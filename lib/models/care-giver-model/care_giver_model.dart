@@ -57,6 +57,45 @@ class CareGiverModel {
   /// Convert [CareGiverModel] to a Firestore-compatible map
   Map<String, dynamic> toDoc() => _$CareGiverModelToDoc(this);
 
+  /// CopyWith method to create a new [CareGiverModel] with updated values
+  CareGiverModel copyWith({
+    String? caregiverId,
+    String? uid,
+    String? fullname,
+    String? email,
+    String? phone,
+    String? address,
+    String? profileImage,
+    String? notificationToken,
+    List<String>? qualifications,
+    List<String>? preferredCareTypes,
+    List<String>? availability,
+    List<String>? assignedShifts,
+    String? registeredCode,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isAvailable,
+  }) {
+    return CareGiverModel(
+      address ?? this.address,
+      uid: uid ?? this.uid,
+      fullname: fullname ?? this.fullname,
+      email: email ?? this.email,
+      createdAt: createdAt ?? this.createdAt,
+      profileImage: profileImage ?? this.profileImage,
+      notificationToken: notificationToken ?? this.notificationToken,
+      caregiverId: caregiverId ?? this.caregiverId,
+      phone: phone ?? this.phone,
+      qualifications: qualifications ?? this.qualifications,
+      preferredCareTypes: preferredCareTypes ?? this.preferredCareTypes,
+      availability: availability ?? this.availability,
+      assignedShifts: assignedShifts ?? this.assignedShifts,
+      registeredCode: registeredCode ?? this.registeredCode,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isAvailable: isAvailable ?? this.isAvailable,
+    );
+  }
+
   /// Unique identifier for the caregiver
   final String caregiverId;
 
