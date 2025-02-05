@@ -15,7 +15,7 @@ build.zip
 
 # Test related files
 coverage/
-dev_keys.dart
+lib/dev_env.dart
 
 # environment configuration
 .env
