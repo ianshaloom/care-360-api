@@ -76,7 +76,7 @@ class FirestoreHelper {
     Map<String, dynamic> data, {
     String? subDocId,
   }) async {
-    final docRef = await _firestore
+    await _firestore
         .collection(collection)
         .doc(documentId)
         .collection(subCollection)

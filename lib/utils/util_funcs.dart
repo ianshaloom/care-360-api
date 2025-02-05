@@ -3,23 +3,20 @@ import 'package:care360/models/care-giver-model/care_giver_model.dart';
 import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/models/shift-model/shift_model.dart';
 import 'package:care360/utils/firestore_helper.dart';
-import 'package:care360/utils/messaging_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 
 ///
 class ShiftDistributor {
   /// Constructor for [ShiftDistributor].
-  ShiftDistributor(this._firestoreHelper, this._messagingHelper);
+  ShiftDistributor(this._firestoreHelper);
 
   final FirestoreHelper _firestoreHelper;
-  final MessagingHelper _messagingHelper;
 
   /// Main function to assign shifts
   Future<void> assignShiftsFromRequest(RequestModel request) async {
     // Step 1: Fetch all available caregivers
     final caregivers = await _fetchAvailableCaregivers();
     if (caregivers.isEmpty) {
-      print('No available caregivers found');
       return;
     }
 
@@ -119,7 +116,6 @@ class ShiftDistributor {
       }
 
       if (!shiftAssigned) {
-        print('\n\n💡 --- Shift ${shift.shiftId} could not be assigned --- 💡');
         unassignedShifts.add(shift);
       }
     }
@@ -276,7 +272,6 @@ class ShiftDistributor {
           realEndTime.isAfter(
             shiftStartTime,
           )) {
-        print('real start time: $realStartTime, real end time: $realEndTime');
         return true;
       }
     }
