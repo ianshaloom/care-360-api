@@ -9,6 +9,7 @@ part of 'shift_model.dart';
 // JsonSerializableGenerator
 ShiftModel _$ShiftModelFromJson(Map<String, dynamic> json) => ShiftModel(
       shiftId: json['shiftId'] as String,
+      requestId: json['requestId'] as String,
       caregiverId: json['caregiverId'] as String,
       clientId: json['clientId'] as String,
       careHomeId: json['careHomeId'] as String,
@@ -42,6 +43,7 @@ ShiftModel _$ShiftModelFromJson(Map<String, dynamic> json) => ShiftModel(
 Map<String, dynamic> _$ShiftModelToDoc(ShiftModel instance) =>
     <String, dynamic>{
       'shiftId': instance.shiftId,
+      'requestId': instance.requestId,
       'caregiverId': instance.caregiverId,
       'clientId': instance.clientId,
       'careHomeId': instance.careHomeId,
@@ -63,6 +65,7 @@ Map<String, dynamic> _$ShiftModelToDoc(ShiftModel instance) =>
 Map<String, dynamic> _$ShiftModelToJson(ShiftModel instance) =>
     <String, dynamic>{
       'shiftId': instance.shiftId,
+      'requestId': instance.requestId,
       'caregiverId': instance.caregiverId,
       'clientId': instance.clientId,
       'careHomeId': instance.careHomeId,

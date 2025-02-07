@@ -134,6 +134,7 @@ class RequestModel {
 
     final shift = ShiftModel(
       shiftId: const Uuid().v4(),
+      requestId: requestId,
       careHomeId: careHomeId,
       caregiverId: caregiverId,
       clientId: clientId,
@@ -184,6 +185,13 @@ class RequestModel {
         }
 
         shifts.add(newShift);
+      }
+
+      // check if the first shift is trully the first date shift
+      if ((shift.startTime.day == selectedDates!.first.day) &&
+          (shift.startTime.month == selectedDates!.first.month) &&
+          (shift.startTime.hour == selectedDates!.first.hour)) {
+        shifts.removeAt(0);
       }
     }
 
@@ -250,6 +258,13 @@ class RequestModel {
         }
 
         shifts.add(newShift);
+      }
+
+      // check if the first shift is trully the first date shift
+      if ((shift.startTime.day == repeatDates.first.day) &&
+          (shift.startTime.month == repeatDates.first.month) &&
+          (shift.startTime.hour == repeatDates.first.hour)) {
+        shifts.removeAt(0);
       }
     }
 

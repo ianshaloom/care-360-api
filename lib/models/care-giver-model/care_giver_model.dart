@@ -9,12 +9,13 @@ part 'care_giver_model.g.dart';
 @JsonSerializable()
 class CareGiverModel {
   /// Constructor for [CareGiverModel]
-  CareGiverModel(
-    this.address, {
+  CareGiverModel({
     required this.uid,
-    required this.fullname,
+    required this.firstName,
+    required this.lastName,
     required this.email,
     required this.createdAt,
+    this.address = '',
     this.profileImage,
     this.notificationToken,
     this.caregiverId = '',
@@ -32,7 +33,8 @@ class CareGiverModel {
   CareGiverModel.empty()
       : caregiverId = '',
         uid = '',
-        fullname = '',
+        firstName = '',
+        lastName = '',
         email = '',
         phone = '',
         address = '',
@@ -61,7 +63,8 @@ class CareGiverModel {
   CareGiverModel copyWith({
     String? caregiverId,
     String? uid,
-    String? fullname,
+    String? firstName,
+    String? lastName,
     String? email,
     String? phone,
     String? address,
@@ -77,9 +80,10 @@ class CareGiverModel {
     bool? isAvailable,
   }) {
     return CareGiverModel(
-      address ?? this.address,
+      address: address ?? this.address,
       uid: uid ?? this.uid,
-      fullname: fullname ?? this.fullname,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
       email: email ?? this.email,
       createdAt: createdAt ?? this.createdAt,
       profileImage: profileImage ?? this.profileImage,
@@ -102,8 +106,11 @@ class CareGiverModel {
   /// Firebase Authentication UID linked to the caregiver
   final String uid;
 
-  /// Full name of the caregiver
-  final String fullname;
+  /// First name of the caregiver
+  final String firstName;
+
+  /// Last name of the caregiver
+  final String lastName;
 
   ///  Email Address of the admin
   final String email;
@@ -153,7 +160,7 @@ class CareGiverModel {
   @override
   String toString() {
     return '\nCaregiverModel { caregiverId: $caregiverId, uid: $uid, '
-        'name: $fullname, email: $email, phone: $phone, address: $address,'
+        'name: $firstName, email: $email, phone: $phone, address: $address,'
         ' qualifications: $qualifications, availability: $availability,'
         ' assignedShifts: $assignedShifts, registeredCode: $registeredCode,'
         ' createdAt: $createdAt, notificationToken: $notificationToken,'

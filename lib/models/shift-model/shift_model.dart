@@ -2,6 +2,7 @@ import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/utils/timestamp_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'shift_model.g.dart';
 
@@ -12,6 +13,7 @@ class ShiftModel {
   /// Constructor for [ShiftModel]
   ShiftModel({
     required this.shiftId,
+    required this.requestId,
     required this.caregiverId,
     required this.clientId,
     required this.careHomeId,
@@ -31,7 +33,8 @@ class ShiftModel {
   /// Factory constructor of [ShiftModel] from [RequestModel]
   factory ShiftModel.fromRequest(RequestModel request) {
     return ShiftModel(
-      shiftId: request.requestId,
+      shiftId: const Uuid().v4(),
+      requestId: request.requestId,
       caregiverId: request.assignedCaregiverId!,
       clientId: '',
       careHomeId: request.careHomeId,
@@ -48,6 +51,7 @@ class ShiftModel {
   /// Static function to create an empty [ShiftModel]
   ShiftModel.empty()
       : shiftId = '',
+        requestId = '',
         caregiverId = '',
         clientId = '',
         careHomeId = '',
@@ -77,6 +81,7 @@ class ShiftModel {
   Map<String, String> toNotificationJson() {
     return {
       'shiftId': shiftId,
+      'requestId': requestId,
       'caregiverId': caregiverId,
       'clientId': clientId,
       'careHomeId': careHomeId,
@@ -101,6 +106,7 @@ class ShiftModel {
   /// A CopyWith method to update the ShiftModel
   ShiftModel copyWith({
     String? shiftId,
+    String? requestId,
     String? caregiverId,
     String? clientId,
     String? careHomeId,
@@ -118,6 +124,7 @@ class ShiftModel {
   }) {
     return ShiftModel(
       shiftId: shiftId ?? this.shiftId,
+      requestId: requestId ?? this.requestId,
       caregiverId: caregiverId ?? this.caregiverId,
       clientId: clientId ?? this.clientId,
       careHomeId: careHomeId ?? this.careHomeId,
@@ -137,6 +144,9 @@ class ShiftModel {
 
   /// Unique identifier for the shift
   final String shiftId;
+
+  /// The request ID of the shift
+  final String requestId;
 
   /// ID of the caregiver assigned to the shift
   final String caregiverId;
@@ -185,7 +195,7 @@ class ShiftModel {
   String toString() {
     return '\nShiftModel { shiftId: $shiftId, caregiverId: $caregiverId,'
         ' clientId: $clientId, careHomeId: $careHomeId,'
-        ' startTime: $startTime,'
+        ' startTime: $startTime, requestId: $requestId,'
         ' endTime: $endTime, status: $status, notes: $notes,'
         ' createdAt: $createdAt, floatStatus: $floatStatus,'
         ' updatedAt: $updatedAt, clockInTime: $clockInTime,'

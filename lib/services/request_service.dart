@@ -60,7 +60,7 @@ class RequestService {
     RequestModel requestModel,
   ) async {
     try {
-      final request = requestModel.toJson();
+      final request = requestModel.toDoc();
 
       // add the request to the request collection
       final requestId = await _firestoreHelper.addDocument(

@@ -8,9 +8,10 @@ part of 'care_giver_model.dart';
 
 CareGiverModel _$CareGiverModelFromJson(Map<String, dynamic> json) =>
     CareGiverModel(
-      json['address'] as String,
+      address: json['address'] as String,
       uid: json['uid'] as String,
-      fullname: json['fullname'] as String,
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
       email: json['email'] as String,
       profileImage: json['profileImage'] as String?,
       notificationToken: json['notificationToken'] as String?,
@@ -44,7 +45,8 @@ Map<String, dynamic> _$CareGiverModelToJson(CareGiverModel instance) =>
     <String, dynamic>{
       'caregiverId': instance.caregiverId,
       'uid': instance.uid,
-      'fullname': instance.fullname,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
       'email': instance.email,
       'phone': instance.phone,
       'address': instance.address,
@@ -64,7 +66,8 @@ Map<String, dynamic> _$CareGiverModelToDoc(CareGiverModel instance) =>
     <String, dynamic>{
       'caregiverId': instance.caregiverId,
       'uid': instance.uid,
-      'fullname': instance.fullname,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
       'email': instance.email,
       'phone': instance.phone,
       'address': instance.address,
