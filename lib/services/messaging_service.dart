@@ -20,8 +20,8 @@ class MessagingService {
       id,
     );
 
-    if (snapshot.containsKey('notificationToken')) {
-      return snapshot['notificationToken'] as String?;
+    if (snapshot.containsKey('token')) {
+      return snapshot['token'] as String?;
     }
 
     return null;
@@ -43,9 +43,9 @@ class MessagingService {
 
     // skip where notificationToken is null, add the rest to tokens
     for (final user in users) {
-      if (user.containsKey('notificationToken')) {
-        if (user['notificationToken'] != null) {
-          tokens.add(user['notificationToken']! as String);
+      if (user.containsKey('token')) {
+        if (user['token'] != null) {
+          tokens.add(user['token']! as String);
         }
       }
     }
