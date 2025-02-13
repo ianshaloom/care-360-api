@@ -15,26 +15,22 @@ ShiftModel _$ShiftModelFromJson(Map<String, dynamic> json) => ShiftModel(
       careHomeId: json['careHomeId'] as String,
       status: $enumDecode(_$ShiftStatusEnumMap, json['status']),
       floatStatus: $enumDecode(_$FloatStatusEnumMap, json['floatStatus']),
-      notes: (json['notes'] as List<dynamic>).map((e) => e as String).toList(),
-      clockInLocation: (json['clockInLocation'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
+      notes: (json['notes'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry(k, e as String),
       ),
-      clockOutLocation:
-          (json['clockOutLocation'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
-      ),
+      clockIn: json['clockIn'] != null
+          ? Clock.fromSnapshot(json['clockIn'] as Map<String, dynamic>)
+          : null,
+      clockOut: json['clockOut'] != null
+          ? Clock.fromSnapshot(json['clockOut'] as Map<String, dynamic>)
+          : null,
+      careHome: CareHome.fromSnapshot(json['careHome'] as Map<String, dynamic>),
       startTime: (json['startTime'] as Timestamp).toDateTime(),
       endTime: (json['endTime'] as Timestamp).toDateTime(),
       createdAt: (json['createdAt'] as Timestamp).toDateTime(),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : (json['updatedAt'] as Timestamp).toDateTime(),
-      clockInTime: json['clockInTime'] == null
-          ? null
-          : (json['clockInTime'] as Timestamp).toDateTime(),
-      clockOutTime: json['clockOutTime'] == null
-          ? null
-          : (json['clockOutTime'] as Timestamp).toDateTime(),
+      updatedAt: json['updatedAt'] != null
+          ? (json['updatedAt'] as Timestamp).toDateTime()
+          : null,
     );
 
 /// This is the JSON representation of a [ShiftModel] object.
@@ -54,10 +50,9 @@ Map<String, dynamic> _$ShiftModelToDoc(ShiftModel instance) =>
       'notes': instance.notes,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'clockInTime': instance.clockInTime,
-      'clockOutTime': instance.clockOutTime,
-      'clockInLocation': instance.clockInLocation,
-      'clockOutLocation': instance.clockOutLocation,
+      'careHome': instance.careHome.toJson(),
+      'clockIn': instance.clockIn?.toDoc(),
+      'clockOut': instance.clockOut?.toDoc(),
     };
 
 /// This is the JSON representation of a [ShiftModel] object.
@@ -72,14 +67,13 @@ Map<String, dynamic> _$ShiftModelToJson(ShiftModel instance) =>
       'status': _$ShiftStatusEnumMap[instance.status],
       'floatStatus': _$FloatStatusEnumMap[instance.floatStatus],
       'notes': instance.notes,
-      'clockInLocation': instance.clockInLocation,
-      'clockOutLocation': instance.clockOutLocation,
+      'clockIn': instance.clockIn?.toJson(),
+      'clockOut': instance.clockOut?.toJson(),
+      'careHome': instance.careHome.toJson(),
       'startTime': instance.startTime.toIso8601String(),
       'endTime': instance.endTime.toIso8601String(),
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'clockInTime': instance.clockInTime?.toIso8601String(),
-      'clockOutTime': instance.clockOutTime?.toIso8601String(),
     };
 
 const _$ShiftStatusEnumMap = {

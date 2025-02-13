@@ -411,7 +411,6 @@ class ShiftAlgorithm {
       );
 
       if (snapshot.docs.isEmpty) {
-        print('No shifts found for $startTime');
         continue;
       }
 

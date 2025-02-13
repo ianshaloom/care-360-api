@@ -34,6 +34,7 @@ RequestModel _$RequestModelFromJson(Map<String, dynamic> json) => RequestModel(
       selectedDates: (json['selectedDates'] as List<dynamic>?)
           ?.map(_convertToDateTime)
           .toList(),
+      careHome: CareHome.fromSnapshot(json['careHome'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$RequestModelToJson(RequestModel instance) =>
@@ -54,6 +55,7 @@ Map<String, dynamic> _$RequestModelToJson(RequestModel instance) =>
       'expiresAt': instance.expiresAt?.toIso8601String(),
       'repeatType': _$RepeatTypeEnumMap[instance.repeatType],
       'repeatDays': instance.repeatDays,
+      'careHome': instance.careHome.toJson(),
     };
 
 Map<String, dynamic> _$RequestModelToDoc(RequestModel instance) =>
@@ -73,6 +75,7 @@ Map<String, dynamic> _$RequestModelToDoc(RequestModel instance) =>
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'expiresAt': instance.expiresAt,
+      'careHome': instance.careHome.toJson(),
     };
 
 const _$RequestStatusEnumMap = {

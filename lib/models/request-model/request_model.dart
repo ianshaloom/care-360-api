@@ -1,3 +1,4 @@
+import 'package:care360/models/care-home-details/care_home.dart';
 import 'package:care360/models/shift-model/shift_model.dart';
 import 'package:care360/utils/timestamp_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
@@ -20,6 +21,7 @@ class RequestModel {
     required this.shiftEndTime,
     required this.additionalNotes,
     required this.createdAt,
+    required this.careHome,
     this.updatedAt,
     this.assignedCaregiverId,
     this.expiresAt,
@@ -45,6 +47,7 @@ class RequestModel {
         untilDate = DateTime.now(),
         repeatType = RepeatType.none,
         repeatDays = [],
+        careHome = CareHome.empty(),
         selectedDates = [];
 
   /// Static function to create [RequestModel] from a Firestore snapshot
@@ -74,6 +77,7 @@ class RequestModel {
     RepeatType? repeatType,
     List<int>? repeatDays,
     List<DateTime>? selectedDates,
+    CareHome? careHome,
   }) {
     return RequestModel(
       requestId: requestId ?? this.requestId,
@@ -91,6 +95,7 @@ class RequestModel {
       repeatType: repeatType ?? this.repeatType,
       repeatDays: repeatDays ?? this.repeatDays,
       selectedDates: selectedDates ?? this.selectedDates,
+      careHome: careHome ?? this.careHome,
     );
   }
 
@@ -141,9 +146,13 @@ class RequestModel {
       startTime: shiftStartTime,
       endTime: shiftEndTime,
       status: ShiftStatus.scheduled,
-      floatStatus: FloatStatus.notFloated,
-      notes: [additionalNotes],
+      floatStatus: FloatStatus.floating,
+      notes: {
+        'additionalNotes': additionalNotes,
+        'careRequirements': careRequirements,
+      },
       createdAt: DateTime.now(),
+      careHome: careHome,
     );
 
     // add the first shift
@@ -332,6 +341,9 @@ class RequestModel {
   /// Timestamp when the request expires
   final DateTime? expiresAt;
 
+  /// Care Home
+  final CareHome careHome;
+
   /// Override toString method for better logging and debugging
   @override
   String toString() {
@@ -452,38 +464,3 @@ DateTime _shiftDateTime(DateTime shiftTime, DateTime newDate) {
     shiftTime.minute,
   );
 }
-
-/*  /// factory constructor of [RequestModel] from [DocumentSnapshot]
-  factory RequestModel.fromDocument(
-    DocumentSnapshot<Map<String, dynamic>> document,
-  ) {
-    final data = document.data()!;
-
-    return RequestModel(
-      requestId: document.id,
-      careHomeId: data['careHomeId'] as String,
-      status: (data['status'] as String).requestStatus,
-      careRequirements: data['careRequirements'] as String,
-      shiftStartTime: DateTime.parse(data['shiftStartTime'] as String),
-      shiftEndTime: DateTime.parse(data['shiftEndTime'] as String),
-      additionalNotes: data['additionalNotes'] as String,
-      createdAt: DateTime.parse(data['createdAt'] as String),
-      updatedAt: data['updatedAt'] == null
-          ? null
-          : DateTime.parse(data['updatedAt'] as String),
-      assignedCaregiverId: data['assignedCaregiverId'] as String?,
-      expiresAt: data['expiresAt'] == null
-          ? null
-          : DateTime.parse(data['expiresAt'] as String),
-      untilDate: data['untilDate'] == null
-          ? null
-          : DateTime.parse(data['untilDate'] as String),
-      repeatType: (data['repeatType'] as String).repeatType,
-      repeatDays: (data['repeatDays'] as List<dynamic>?)
-          ?.map((e) => (e as num).toInt())
-          .toList(),
-      selectedDates: (data['selectedDates'] as List<dynamic>?)
-          ?.map((e) => DateTime.parse(e as String))
-          .toList(),
-    );
-  } */

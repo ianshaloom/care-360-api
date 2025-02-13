@@ -1,3 +1,5 @@
+import 'package:care360/models/care-home-details/care_home.dart';
+import 'package:care360/models/clock-in-out-details/clock.dart';
 import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/utils/timestamp_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
@@ -23,11 +25,10 @@ class ShiftModel {
     required this.floatStatus,
     required this.notes,
     required this.createdAt,
+    required this.careHome,
     this.updatedAt,
-    this.clockInTime,
-    this.clockOutTime,
-    this.clockInLocation,
-    this.clockOutLocation,
+    this.clockOut,
+    this.clockIn,
   });
 
   /// Factory constructor of [ShiftModel] from [RequestModel]
@@ -42,9 +43,13 @@ class ShiftModel {
       endTime: request.shiftEndTime,
       status: ShiftStatus.scheduled,
       floatStatus: FloatStatus.notFloated,
-      notes: [request.additionalNotes],
+      notes: {
+        'careRequirements': request.careRequirements,
+        'additionalNotes': request.additionalNotes,
+      },
       createdAt: request.createdAt,
       updatedAt: request.updatedAt ?? request.createdAt,
+      careHome: request.careHome,
     );
   }
 
@@ -59,13 +64,12 @@ class ShiftModel {
         endTime = DateTime.now(),
         status = ShiftStatus.scheduled,
         floatStatus = FloatStatus.notFloated,
-        notes = [],
+        notes = {},
         createdAt = DateTime.now(),
         updatedAt = DateTime.now(),
-        clockInTime = DateTime.now(),
-        clockOutTime = DateTime.now(),
-        clockInLocation = null,
-        clockOutLocation = null;
+        careHome = CareHome.empty(),
+        clockIn = Clock.empty(),
+        clockOut = Clock.empty();
 
   /// Static function to create [ShiftModel] from a Firestore snapshot
   factory ShiftModel.fromSnapshot(Map<String, Object?> json) =>
@@ -89,13 +93,12 @@ class ShiftModel {
       'endTime': endTime.toIso8601String(),
       'status': status.value,
       'floatStatus': floatStatus.value,
-      'notes': notes.join('---'),
+      'notes': notes.toString(),
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String() ?? '',
-      'clockInTime': clockInTime?.toIso8601String() ?? '',
-      'clockOutTime': clockOutTime?.toIso8601String() ?? '',
-      'clockInLocation': clockInLocation?.toString() ?? '',
-      'clockOutLocation': clockOutLocation?.toString() ?? '',
+      'clockIn': clockIn!.toJson().toString(),
+      'clockOut': clockOut!.toJson().toString(),
+      'careHome': careHome.toJson().toString(),
     };
   }
 
@@ -114,13 +117,12 @@ class ShiftModel {
     DateTime? endTime,
     ShiftStatus? status,
     FloatStatus? floatStatus,
-    List<String>? notes,
+    Map<String, String>? notes,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? clockInTime,
-    DateTime? clockOutTime,
-    Map<String, double>? clockInLocation,
-    Map<String, double>? clockOutLocation,
+    Clock? clockIn,
+    Clock? clockOut,
+    CareHome? careHome,
   }) {
     return ShiftModel(
       shiftId: shiftId ?? this.shiftId,
@@ -135,10 +137,9 @@ class ShiftModel {
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      clockInTime: clockInTime ?? this.clockInTime,
-      clockOutTime: clockOutTime ?? this.clockOutTime,
-      clockInLocation: clockInLocation ?? this.clockInLocation,
-      clockOutLocation: clockOutLocation ?? this.clockOutLocation,
+      clockIn: clockIn ?? this.clockIn,
+      clockOut: clockOut ?? this.clockOut,
+      careHome: careHome ?? this.careHome,
     );
   }
 
@@ -169,26 +170,23 @@ class ShiftModel {
   /// Status of the float request shift
   final FloatStatus floatStatus;
 
-  /// List of notes or instructions for the shift
-  final List<String> notes;
-
   /// Timestamp when the shift was created
   final DateTime createdAt;
 
   /// Timestamp when the shift was last updated
   final DateTime? updatedAt;
 
+  /// CH_Details
+  final CareHome careHome;
+
   /// Timestamp when the caregiver clocked in
-  final DateTime? clockInTime;
+  final Clock? clockIn;
 
   /// Timestamp when the caregiver clocked out
-  final DateTime? clockOutTime;
+  final Clock? clockOut;
 
-  /// GPS coordinates of the clock-in location (latitude, longitude)
-  final Map<String, double>? clockInLocation;
-
-  /// GPS coordinates of the clock-out location (latitude, longitude)
-  final Map<String, double>? clockOutLocation;
+  /// List of notes or instructions for the shift
+  final Map<String, String> notes;
 
   /// Override toString method for better logging and debugging
   @override
@@ -198,10 +196,7 @@ class ShiftModel {
         ' startTime: $startTime, requestId: $requestId,'
         ' endTime: $endTime, status: $status, notes: $notes,'
         ' createdAt: $createdAt, floatStatus: $floatStatus,'
-        ' updatedAt: $updatedAt, clockInTime: $clockInTime,'
-        ' clockOutTime: $clockOutTime,'
-        ' clockInLocation: $clockInLocation, '
-        'clockOutLocation: $clockOutLocation } \n';
+        ' updatedAt: $updatedAt, } \n';
   }
 }
 
@@ -306,40 +301,3 @@ extension StringToFloatStatus on String {
     }
   }
 }
-
-/*
-*   /// factory constructor of [ShiftModel] from [DocumentSnapshot]
-  factory ShiftModel.fromDocument(
-    DocumentSnapshot<Map<String, dynamic>> document,
-  ) {
-    final data = document.data()!;
-
-    return ShiftModel(
-      shiftId: document.id,
-      caregiverId: data['caregiverId'] as String,
-      clientId: data['clientId'] as String,
-      careHomeId: data['careHomeId'] as String,
-      status: data['status'] as String,
-      notes: (data['notes'] as List<dynamic>).map((e) => e as String).toList(),
-      clockInLocation: (data['clockInLocation'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
-      ),
-      clockOutLocation:
-          (data['clockOutLocation'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
-      ),
-      startTime: (data['startTime'] as Timestamp).toDateTime(),
-      endTime: (data['endTime'] as Timestamp).toDateTime(),
-      createdAt: (data['createdAt'] as Timestamp).toDateTime(),
-      updatedAt: data['updatedAt'] == null
-          ? null
-          : (data['updatedAt'] as Timestamp).toDateTime(),
-      clockInTime: data['clockInTime'] == null
-          ? null
-          : (data['clockInTime'] as Timestamp).toDateTime(),
-      clockOutTime: data['clockOutTime'] == null
-          ? null
-          : (data['clockOutTime'] as Timestamp).toDateTime(),
-    );
-  }
- */

@@ -1,5 +1,6 @@
 import 'package:care360/constants/constants.dart';
 import 'package:care360/errors/failure_n_success.dart';
+import 'package:care360/models/clock-in-out-details/clock.dart';
 import 'package:care360/models/shift-model/shift_model.dart';
 import 'package:care360/services/messaging_service.dart';
 import 'package:care360/utils/firestore_helper.dart';
@@ -198,6 +199,8 @@ class ShiftService {
   }) async {
     try {
       final clockIn = DateTime.parse(clockInTime);
+      final lat = clockInLocation['lat']!;
+      final long = clockInLocation['long']!;
 
       final result1 = await getShift(shiftId);
       if (result1.isLeft()) {
@@ -222,8 +225,11 @@ class ShiftService {
 
       // update the shift
       final clockedInShift = shift.copyWith(
-        clockInTime: clockIn,
-        clockInLocation: clockInLocation,
+        clockIn: Clock(
+          time: clockIn,
+          lat: lat,
+          long: long,
+        ),
         status: ShiftStatus.inProgress,
         updatedAt: DateTime.now(),
       );
@@ -260,6 +266,8 @@ class ShiftService {
   }) async {
     try {
       final clockOut = DateTime.parse(clockOutTime);
+      final lat = clockOutLocation['lat']!;
+      final long = clockOutLocation['long']!;
 
       final result1 = await getShift(shiftId);
       if (result1.isLeft()) {
@@ -284,8 +292,11 @@ class ShiftService {
 
       // update the shift
       final clockedOutShift = shift.copyWith(
-        clockOutTime: clockOut,
-        clockOutLocation: clockOutLocation,
+        clockOut: Clock(
+          time: clockOut,
+          lat: lat,
+          long: long,
+        ),
         status: ShiftStatus.completed,
         updatedAt: DateTime.now(),
       );
