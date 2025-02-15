@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:io';
 
 import 'package:dart_firebase_admin/dart_firebase_admin.dart';
@@ -16,10 +14,6 @@ String? privateKey =
 FirebaseAdminApp? firebaseAdmin;
 
 Future<void> init(InternetAddress ip, int port) async {
-  print(
-    '\n🏁 Initializing Firebase Admin SDK',
-  );
-
   // Initialize Firebase Admin SDK
   firebaseAdmin = FirebaseAdminApp.initializeApp(
     projectId!,
@@ -28,10 +22,6 @@ Future<void> init(InternetAddress ip, int port) async {
       email: cientEmail!,
       privateKey: privateKey!,
     ),
-  );
-
-  print(
-    '\n 🏁 🏁 Firebase Admin SDK initialized successfully!',
   );
 }
 
