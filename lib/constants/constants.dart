@@ -38,7 +38,7 @@ const String notificationCollection = 'notifications';
 const String logCollection = 'logs';
 
 /// firestore notif tokens collections
-const String notifTokenCollection = 'notif-tokens';
+const String notifTokenCollection = 'notification-tokens';
 
 /// firestore subcollections
 ///

@@ -193,16 +193,19 @@ class MessagingService {
 
     /// If there are any failed notifications, log them to firestore.
     if (failed.isNotEmpty) {
+      final data = {
+        'id': 'notification-log',
+        'tokens': notifTokens.length,
+        'failed': failed.length,
+        'failedTokens': failed,
+      };
       await _firestoreHelper.addDocument(
         logCollection,
-        {
-          'id': 'notification-log',
-          'tokens': notifTokens.length,
-          'failed': failed.length,
-          'failedTokens': failed,
-        },
+        data,
         documentId: DateTime.now().toIso8601String(),
       );
+
+      return 'Notification sent to ${notifTokens.length} devices';
     }
 
     return 'Notification sent to ${notifTokens.length} devices';

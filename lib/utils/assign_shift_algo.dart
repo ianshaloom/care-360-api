@@ -139,21 +139,11 @@ class ShiftAlgorithm {
     }
 
     // Notify the available caregivers, first get tokens from the available
-    // caregivers
-    final caregiverTokens = availableCareGivers
-        .map(
-          (caregiver) => caregiver.notificationToken!,
-        )
-        .toList();
-
-    if (caregiverTokens.isNotEmpty) {
-      // send the notification
-      MessagingService(_messagingHelper, _firestoreHelper).multicast(
-        'New Request',
-        'A new request has been floated to you, check out the available shifts',
-        notifTokens: caregiverTokens,
-      );
-    }
+    MessagingService(_messagingHelper, _firestoreHelper).multicast(
+      'Open Shifts',
+      'A new request has been floated, check out the available shifts',
+      user: 'care-giver',
+    );
   }
 
   /// Main function to Accept a Shift from a given request
