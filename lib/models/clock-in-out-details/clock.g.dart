@@ -7,7 +7,7 @@ part of 'clock.dart';
 // **************************************************************************
 
 Clock _$ClockFromJson(Map<String, dynamic> json) => Clock(
-      time: (json['time'] as Timestamp).toDateTime(),
+      time: DateTime.parse(json['time'] as String),
       long: (json['long'] as num).toDouble(),
       lat: (json['lat'] as num).toDouble(),
     );
@@ -19,7 +19,7 @@ Map<String, dynamic> _$ClockToJson(Clock instance) => <String, dynamic>{
     };
 
 Map<String, dynamic> _$ClockToDoc(Clock instance) => <String, dynamic>{
-      'time': instance.time,
+      'time': instance.time.toIso8601String(),
       'long': instance.long,
       'lat': instance.lat,
     };
