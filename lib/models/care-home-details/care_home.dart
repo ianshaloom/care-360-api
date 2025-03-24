@@ -6,11 +6,6 @@ part 'care_home.g.dart';
 /// Represents a caregigfver in the system.
 @JsonSerializable()
 class CareHome {
-  ///
-  final String fullName;
-
-  ///
-  final String address;
 
   ///
   CareHome({
@@ -27,6 +22,11 @@ class CareHome {
   /// Static function to create [CareHome] from a Firestore snapshot
   factory CareHome.fromSnapshot(Map<String, dynamic> json) =>
       _$CareHomeFromJson(json);
+  ///
+  final String fullName;
+
+  ///
+  final String address;
 
   /// Convert [CareHome] to a Firestore-compatible map
   Map<String, dynamic> toJson() => _$CareHomeToJson(this);

@@ -14,6 +14,8 @@ String? privateKey =
 FirebaseAdminApp? firebaseAdmin;
 
 Future<void> init(InternetAddress ip, int port) async {
+  print('🏁 Initializing Firebase Admin SDK... 🏁');
+  //
   // Initialize Firebase Admin SDK
   firebaseAdmin = FirebaseAdminApp.initializeApp(
     projectId!,
@@ -23,6 +25,11 @@ Future<void> init(InternetAddress ip, int port) async {
       privateKey: privateKey!,
     ),
   );
+
+  //
+
+  print('🏁 🏁 Firebase Admin SDK initialized'
+      ' successfully! 🏁 🏁 \n.\n');
 }
 
 Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {

@@ -22,3 +22,4 @@ lib/dev_env.dart
 service-account.json
 lib/main.dart
 templates/
+deploy.sh

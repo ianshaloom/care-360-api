@@ -27,22 +27,22 @@ class TimeStampHelper implements Comparable<TimeStampHelper> {
 
   /// Create a [TimeStampHelper] fromMillisecondsSinceEpoch
   factory TimeStampHelper.fromMillisecondsSinceEpoch(int milliseconds) {
-    int seconds = (milliseconds / _kThousand).floor();
-    final int nanoseconds = (milliseconds - seconds * _kThousand) * _kMillion;
+    final seconds = (milliseconds / _kThousand).floor();
+    final nanoseconds = (milliseconds - seconds * _kThousand) * _kMillion;
     return TimeStampHelper(seconds, nanoseconds);
   }
 
   /// Create a [TimeStampHelper] fromMicrosecondsSinceEpoch
   factory TimeStampHelper.fromMicrosecondsSinceEpoch(int microseconds) {
-    final int seconds = microseconds ~/ _kMillion;
-    final int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
+    final seconds = microseconds ~/ _kMillion;
+    final nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
     return TimeStampHelper(seconds, nanoseconds);
   }
 
   /// Create a [TimeStampHelper] from [DateTime] instance
   factory TimeStampHelper.fromDate(DateTime date) {
     return TimeStampHelper.fromMicrosecondsSinceEpoch(
-        date.microsecondsSinceEpoch);
+        date.microsecondsSinceEpoch,);
   }
 
   /// Create a [TimeStampHelper] from [DateTime].now()

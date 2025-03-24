@@ -45,4 +45,5 @@ const String notifTokenCollection = 'notification-tokens';
 ///
 
 const String token =
+    // ignore: lines_longer_than_80_chars
     'dbyIwnIwTLWjKd01jgrSWP:APA91bHQFAx6n1MvFNIYZZiX3tTIOiiFpiTupBZLrvumrV13gdKl93528s_X2ALLSfziic6mOelL71vR-b3gQTWOAWOjnQd-e9E4STEMrg1HzBNEDnq3ddU';

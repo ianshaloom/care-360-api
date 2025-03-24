@@ -17,13 +17,31 @@ class ShiftService {
   final MessagingHelper _messagingHelper;
 
   /// Fetches a shift by its unique ID.
-  Future<Either<Failure, ShiftModel>> getShift(String shiftId) async {
+  Future<Either<Failure, ShiftModel>> getShift(
+    String shiftId, {
+    bool isSchduled = false,
+  }) async {
     try {
+      if (isSchduled) {
+        final snapshot = await _firestoreHelper.getDocument(
+          scheduledShiftCollection,
+          shiftId,
+        );
+
+        if (snapshot.isEmpty) {
+          throw Exception('Shift not found');
+        }
+
+        return Right(ShiftModel.fromSnapshot(snapshot));
+      }
+
       final snapshot =
           await _firestoreHelper.getDocument(shiftCollection, shiftId);
+
       if (snapshot.isEmpty) {
         throw Exception('Shift not found');
       }
+
       return Right(ShiftModel.fromSnapshot(snapshot));
     } catch (e) {
       return Left(
@@ -102,9 +120,22 @@ class ShiftService {
   }
 
   /// Updates an existing shift in Firestore.
-  Future<Either<Failure, String>> updateShift(ShiftModel shift) async {
+  Future<Either<Failure, String>> updateShift(
+    ShiftModel shift, {
+    bool isSchduled = false,
+  }) async {
     try {
-      final shiftData = shift.toJson();
+      final shiftData = shift.toDoc();
+
+      if (isSchduled) {
+        await _firestoreHelper.updateDocument(
+          scheduledShiftCollection,
+          shift.shiftId,
+          shiftData,
+        );
+
+        return Right(shift.shiftId);
+      }
 
       await _firestoreHelper.updateDocument(
         shiftCollection,
@@ -195,14 +226,26 @@ class ShiftService {
   Future<Either<Failure, String>> clockInCaregiver(
     String shiftId, {
     required String clockInTime,
-    required Map<String, double> clockInLocation,
+    required Map<String, dynamic> clockInLocation,
   }) async {
     try {
-      final clockIn = DateTime.parse(clockInTime);
-      final lat = clockInLocation['lat']!;
-      final long = clockInLocation['long']!;
+      final date = DateTime.parse(clockInTime);
 
-      final result1 = await getShift(shiftId);
+      final clockIn = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        date.hour,
+        date.minute,
+      );
+      final lat = clockInLocation['lat']! as double;
+      final long = clockInLocation['long']! as double;
+
+      final result1 = await getShift(
+        shiftId,
+        isSchduled: true,
+      );
+
       if (result1.isLeft()) {
         final failure = result1.fold((l) => l, (r) => null);
 
@@ -234,7 +277,8 @@ class ShiftService {
         updatedAt: DateTime.now(),
       );
 
-      final result2 = await updateShift(clockedInShift);
+      final result2 = await updateShift(clockedInShift, isSchduled: true);
+
       if (result2.isLeft()) {
         return result2;
       }
@@ -262,14 +306,27 @@ class ShiftService {
   Future<Either<Failure, String>> clockOutCaregiver(
     String shiftId, {
     required String clockOutTime,
-    required Map<String, double> clockOutLocation,
+    required Map<String, dynamic> clockOutLocation,
   }) async {
     try {
-      final clockOut = DateTime.parse(clockOutTime);
-      final lat = clockOutLocation['lat']!;
-      final long = clockOutLocation['long']!;
+      final date = DateTime.parse(clockOutTime);
 
-      final result1 = await getShift(shiftId);
+      final clockOut = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        date.hour,
+        date.minute,
+      );
+      
+      final lat = clockOutLocation['lat']! as double;
+      final long = clockOutLocation['long']! as double;
+
+      final result1 = await getShift(
+        shiftId,
+        isSchduled: true,
+      );
+
       if (result1.isLeft()) {
         final failure = result1.fold((l) => l, (r) => null);
 
@@ -301,7 +358,10 @@ class ShiftService {
         updatedAt: DateTime.now(),
       );
 
-      final result2 = await updateShift(clockedOutShift);
+      final result2 = await updateShift(
+        clockedOutShift,
+        isSchduled: true,
+      );
       if (result2.isLeft()) {
         return result2;
       }

@@ -6,7 +6,7 @@ class FireDartException implements Exception {
   /// This is the error message that will be displayed to the user.
   FireDartException(
       {this.message =
-          'An error occurred during communication with the database.'});
+          'An error occurred during communication with the database.',});
 
   /// This is the constructor for the FireDartException class.
   final String message;

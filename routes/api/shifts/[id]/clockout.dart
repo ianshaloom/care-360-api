@@ -24,10 +24,10 @@ Future<Response> onRequest(RequestContext context, String id) {
 Future<Response> _patch(RequestContext context, String id) async {
   try {
     final repo = context.read<ShiftService>();
-    final data = context.request.body() as Map<String, dynamic>;
+    final data = await context.request.json() as Map<String, dynamic>;
 
     final clockOut = data['clockOutTime'] as String;
-    final location = data['clockOutLocation'] as Map<String, double>;
+    final location = data['clockOutLocation'] as Map<String, dynamic>;
 
     // Failure object
     Failure failure = EmptyFailure(errorMessage: '');

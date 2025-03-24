@@ -54,7 +54,7 @@ class MessagingService {
   }
 
   /// Sends a notification to a single device.
-  void send(
+  Future<void> send(
     String title,
     String body, {
     String? userId,
@@ -120,7 +120,7 @@ class MessagingService {
   }
 
   /// Sends a notification to several devices.
-  void multicast(
+  Future<void> multicast(
     String title,
     String body, {
     String? user,
