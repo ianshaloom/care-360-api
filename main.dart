@@ -6,7 +6,7 @@ import 'package:dart_frog/dart_frog.dart';
 // Project ID, Client ID, Client Email, and Private Key
 String? projectId = Platform.environment['PROJECT_ID'];
 String? clientId = Platform.environment['CLIENT_ID'];
-String? cientEmail = Platform.environment['CLIENT_EMAIL'];
+String? clientEmail = Platform.environment['CLIENT_EMAIL'];
 String? privateKey =
     Platform.environment['PRIVATE_KEY']?.replaceAll(r'\n', '\n');
 
@@ -21,7 +21,7 @@ Future<void> init(InternetAddress ip, int port) async {
     projectId!,
     Credential.fromServiceAccountParams(
       clientId: clientId!,
-      email: cientEmail!,
+      email: clientEmail!,
       privateKey: privateKey!,
     ),
   );
