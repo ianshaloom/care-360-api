@@ -2,7 +2,7 @@ import 'package:care360/constants/constants.dart';
 import 'package:care360/models/care-giver-model/care_giver_model.dart';
 import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/models/shift-model/shift_model.dart';
-import 'package:care360/utils/firestore_helper.dart';
+import 'package:care360/utils/helpers/firestore_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 
 ///

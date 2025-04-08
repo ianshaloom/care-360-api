@@ -1,7 +1,7 @@
 import 'package:care360/constants/constants.dart';
 import 'package:care360/errors/failure_n_success.dart';
 import 'package:care360/models/client-model/client_model.dart';
-import 'package:care360/utils/firestore_helper.dart';
+import 'package:care360/utils/helpers/firestore_helper.dart';
 import 'package:dartz/dartz.dart';
 
 /// Service class for managing client-related operations.

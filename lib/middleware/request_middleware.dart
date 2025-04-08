@@ -1,6 +1,6 @@
 import 'package:care360/services/request_service.dart';
-import 'package:care360/utils/firestore_helper.dart';
-import 'package:care360/utils/messaging_helper.dart';
+import 'package:care360/utils/helpers/firestore_helper.dart';
+import 'package:care360/utils/helpers/messaging_helper.dart';
 import 'package:dart_firebase_admin/dart_firebase_admin.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 import 'package:dart_firebase_admin/messaging.dart';
