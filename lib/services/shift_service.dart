@@ -3,8 +3,9 @@ import 'package:care360/errors/failure_n_success.dart';
 import 'package:care360/models/clock-in-out-details/clock.dart';
 import 'package:care360/models/shift-model/shift_model.dart';
 import 'package:care360/services/messaging_service.dart';
-import 'package:care360/utils/firestore_helper.dart';
-import 'package:care360/utils/messaging_helper.dart';
+import 'package:care360/utils/data/success_response.dart';
+import 'package:care360/utils/helpers/firestore_helper.dart';
+import 'package:care360/utils/helpers/messaging_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 import 'package:dartz/dartz.dart';
 
@@ -290,7 +291,7 @@ class ShiftService {
         userId: shift.careHomeId,
       );
 
-      return const Right('Caregiver clocked in successfully');
+      return Right(SuccessResponse.clockInSuccessMessage);
     } catch (e) {
       return Left(
         GevericFailure(
@@ -373,7 +374,7 @@ class ShiftService {
         userId: shift.careHomeId,
       );
 
-      return const Right('Caregiver clocked out successfully');
+      return Right(SuccessResponse.clockOutSuccessMessage);
     } catch (e) {
       return Left(
         GevericFailure(

@@ -3,8 +3,8 @@ import 'package:care360/errors/failure_n_success.dart';
 import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/services/messaging_service.dart';
 import 'package:care360/utils/assign_shift_algo.dart';
-import 'package:care360/utils/firestore_helper.dart';
-import 'package:care360/utils/messaging_helper.dart';
+import 'package:care360/utils/helpers/firestore_helper.dart';
+import 'package:care360/utils/helpers/messaging_helper.dart';
 import 'package:dartz/dartz.dart';
 
 /// Service class for managing request-related operations.
