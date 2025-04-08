@@ -3,6 +3,7 @@ import 'package:care360/errors/failure_n_success.dart';
 import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/services/messaging_service.dart';
 import 'package:care360/utils/assign_shift_algo.dart';
+import 'package:care360/utils/data/success_response.dart';
 import 'package:care360/utils/helpers/firestore_helper.dart';
 import 'package:care360/utils/helpers/messaging_helper.dart';
 import 'package:dartz/dartz.dart';
@@ -176,7 +177,7 @@ class RequestService {
       // accept the request
       await shiftAlgo.acceptRequestShift(requestId, shiftId, caregiverId);
 
-      return const Right('Request accepted');
+      return Right(SuccessResponse.clockInSuccessMessage);
     } catch (e) {
       return Left(
         GevericFailure(
