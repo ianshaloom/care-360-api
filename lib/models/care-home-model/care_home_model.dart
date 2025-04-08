@@ -83,9 +83,9 @@ class CareHomeModel {
   /// Override toString method for better logging and debugging
   @override
   String toString() {
-    return '\nCareHomeModel { careHomeId: $careHomeId, uid: $uid, name: $fullname,'
-        ' email: $email, address: $address, phone: $phone, requests: $requests,'
-        ' createdAt: $createdAt, updatedAt: $updatedAt, '
+    return '\nCareHomeModel { careHomeId: $careHomeId, uid: $uid,'
+    ' name: $fullname email: $email, address: $address, phone: $phone,'
+    ' requests: $requests, createdAt: $createdAt, updatedAt: $updatedAt, '
         'profileImage: $profileImage, notificationToken: $notificationToken'
         ' }\n';
   }

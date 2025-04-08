@@ -26,8 +26,9 @@ Future<Response> _patch(RequestContext context, String id) async {
     final repo = context.read<ShiftService>();
     final data = await context.request.json() as Map<String, dynamic>;
 
-    final clockOut = data['clockOutTime'] as String;
-    final location = data['clockOutLocation'] as Map<String, dynamic>;
+    final clockOut = data['time'] as String;
+    final location = data['location'] as Map<String, dynamic>;
+    final report = data['report'] as String;
 
     // Failure object
     Failure failure = EmptyFailure(errorMessage: '');
@@ -37,6 +38,7 @@ Future<Response> _patch(RequestContext context, String id) async {
       id,
       clockOutTime: clockOut,
       clockOutLocation: location,
+      report: report,
     );
 
     response.fold(
@@ -59,9 +61,11 @@ Future<Response> _patch(RequestContext context, String id) async {
       },
     );
   } catch (e) {
-    return Response(
+    return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: e.toString(),
+      body: {
+        'error': e.toString(),
+      },
     );
   }
 }
