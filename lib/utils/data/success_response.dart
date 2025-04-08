@@ -22,6 +22,16 @@ class SuccessResponse {
     'Shift complete! Don’t forget to rest—and travel safely!',
   ];
 
+  /// List of success messages for accepting a shift.
+  static final List<String> acceptShiftSuccessMessages = [
+    'You have successfully accepted the shift.',
+    'Shift accepted! You’re all set to go.',
+    'Great choice! You’ve accepted the shift.',
+    'Shift accepted. Looking forward to seeing you there!',
+    'You’re all set! Shift accepted successfully.',
+    'Shift accepted. Let’s make it a great one!',
+  ];
+
   /// a static getter to get a random success message for clock in
   static String get clockInSuccessMessage {
     final random = Random();
@@ -34,5 +44,12 @@ class SuccessResponse {
     final random = Random();
     final index = random.nextInt(6);
     return clockOutSuccessMessages[index];
+  }
+
+  /// a static getter to get a random success message for accepting a shift
+  static String get acceptShiftSuccessMessage {
+    final random = Random();
+    final index = random.nextInt(6);
+    return acceptShiftSuccessMessages[index];
   }
 }
