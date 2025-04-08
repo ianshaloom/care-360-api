@@ -308,6 +308,7 @@ class ShiftService {
     String shiftId, {
     required String clockOutTime,
     required Map<String, dynamic> clockOutLocation,
+    required String report,
   }) async {
     try {
       final date = DateTime.parse(clockOutTime);
@@ -319,7 +320,7 @@ class ShiftService {
         date.hour,
         date.minute,
       );
-      
+
       final lat = clockOutLocation['lat']! as double;
       final long = clockOutLocation['long']! as double;
 
@@ -359,8 +360,16 @@ class ShiftService {
         updatedAt: DateTime.now(),
       );
 
+      // add report to the shift
+      final notes = shift.notes;
+      notes['report'] = report;
+      final updatedShift = clockedOutShift.copyWith(
+        notes: notes,
+      );
+
+      // update the shift
       final result2 = await updateShift(
-        clockedOutShift,
+        updatedShift,
         isSchduled: true,
       );
       if (result2.isLeft()) {
