@@ -1,5 +1,3 @@
-import 'package:care360/utils/timestamp_helper.dart';
-import 'package:dart_firebase_admin/firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'clock.g.dart';

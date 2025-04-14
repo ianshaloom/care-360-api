@@ -1,6 +1,6 @@
 import 'package:care360/constants/constants.dart';
-import 'package:care360/utils/firestore_helper.dart';
-import 'package:care360/utils/messaging_helper.dart';
+import 'package:care360/utils/helpers/firestore_helper.dart';
+import 'package:care360/utils/helpers/messaging_helper.dart';
 import 'package:dart_firebase_admin/messaging.dart';
 
 /// Service class for managing messaging-related operations.

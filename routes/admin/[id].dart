@@ -49,9 +49,11 @@ Future<Response> _get(RequestContext context, String id) async {
 
     return Response.json(body: admin.toJson());
   } catch (e) {
-    return Response(
+    return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: e.toString(),
+      body: {
+        'error': e.toString(),
+      },
     );
   }
 }
@@ -86,9 +88,11 @@ Future<Response> _delete(RequestContext context, String id) async {
       },
     );
   } catch (e) {
-    return Response(
+    return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: e.toString(),
+      body: {
+        'error': e.toString(),
+      },
     );
   }
 }
@@ -126,9 +130,11 @@ Future<Response> _patch(RequestContext context, String id) async {
       },
     );
   } catch (e) {
-    return Response(
+    return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: e.toString(),
+      body: {
+        'error': e.toString(),
+      },
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:care360/models/care-home-details/care_home.dart';
 import 'package:care360/models/shift-model/shift_model.dart';
-import 'package:care360/utils/timestamp_helper.dart';
+import 'package:care360/utils/helpers/timestamp_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';

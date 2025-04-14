@@ -48,9 +48,11 @@ Future<Response> _get(RequestContext context) async {
 
     return Response.json(body: request);
   } catch (e) {
-    return Response(
+   return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: e.toString(),
+      body: {
+        'error': e.toString(),
+      },
     );
   }
 }
@@ -89,9 +91,11 @@ Future<Response> _post(RequestContext context) async {
       },
     );
   } catch (e) {
-    return Response(
+   return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: e.toString(),
+      body: {
+        'error': e.toString(),
+      },
     );
   }
 }
