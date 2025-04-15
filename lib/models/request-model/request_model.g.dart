@@ -80,6 +80,7 @@ Map<String, dynamic> _$RequestModelToDoc(RequestModel instance) =>
 
 const _$RequestStatusEnumMap = {
   RequestStatus.open: 'open',
+  RequestStatus.floating: 'floating',
   RequestStatus.assigned: 'assigned',
   RequestStatus.expired: 'expired',
 };

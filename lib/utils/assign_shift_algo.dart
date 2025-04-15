@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:care360/constants/constants.dart';
 import 'package:care360/models/care-giver-model/care_giver_model.dart';
 import 'package:care360/models/request-model/request_model.dart';
@@ -139,11 +141,11 @@ class ShiftAlgorithm {
     }
 
     // Notify the available caregivers, first get tokens from the available
-    MessagingService(_messagingHelper, _firestoreHelper).multicast(
+    unawaited(MessagingService(_messagingHelper, _firestoreHelper).multicast(
       'Open Shifts',
       'A new request has been floated, check out the available shifts',
       user: 'care-giver',
-    );
+    ),);
   }
 
   /// Main function to Accept a Shift from a given request
@@ -435,11 +437,11 @@ class ShiftAlgorithm {
     );
 
     // Notify the caregiver
-    MessagingService(_messagingHelper, _firestoreHelper).send(
+    unawaited(MessagingService(_messagingHelper, _firestoreHelper).send(
       'Request Assigned',
       'A request has been assigned to you',
       userId: caregiverId,
-    );
+    ));
   }
 
   Future<bool> _fetchShiftsForCaregiverOnDate(
@@ -525,11 +527,11 @@ class ShiftAlgorithm {
     }
 
     // Notify the admins that a request has been created
-    MessagingService(_messagingHelper, _firestoreHelper).multicast(
+    unawaited(MessagingService(_messagingHelper, _firestoreHelper).multicast(
       'Unassigned Shifts',
       'Some shifts could not be assigned, please check the unassigned shifts',
       user: 'admin',
-    );
+    ));
   }
 
   /// Store assignable shifts in request sub collection

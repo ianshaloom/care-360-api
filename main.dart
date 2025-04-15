@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dart_firebase_admin/dart_firebase_admin.dart';
 import 'package:dart_frog/dart_frog.dart';
+import 'package:logger/logger.dart';
 
 // Project ID, Client ID, Client Email, and Private Key
 String? projectId = Platform.environment['PROJECT_ID'];
@@ -14,8 +15,19 @@ String? privateKey =
 FirebaseAdminApp? firebaseAdmin;
 
 Future<void> init(InternetAddress ip, int port) async {
-  print('🏁 Initializing Firebase Admin SDK... 🏁');
-  //
+  Logger(). i('🏁 🏁 🏁 Initializing Firebase Admin SDK... 🏁 🏁 \n');
+
+  // Check if the required environment variables are set
+  if (projectId == null ||
+      clientId == null ||
+      clientEmail == null ||
+      privateKey == null) {
+        Logger().e('🏁 🏁 Firebase Admin SDK initialization failed! 🏁 🏁 \n');
+    Logger().e('🏁 🏁 Please set the required environment variables: '
+        'PROJECT_ID, CLIENT_ID, CLIENT_EMAIL, PRIVATE_KEY 🏁 🏁 \n');
+    exit(1);
+  }
+
   // Initialize Firebase Admin SDK
   firebaseAdmin = FirebaseAdminApp.initializeApp(
     projectId!,
@@ -26,10 +38,7 @@ Future<void> init(InternetAddress ip, int port) async {
     ),
   );
 
-  //
-
-  print('🏁 🏁 Firebase Admin SDK initialized'
-      ' successfully! 🏁 🏁 \n.\n');
+  Logger().i('🏁 🏁 Firebase Admin SDK initialized successfully! 🏁 🏁 \n');
 }
 
 Future<HttpServer> run(Handler handler, InternetAddress ip, int port) async {

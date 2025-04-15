@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:care360/constants/constants.dart';
 import 'package:care360/errors/failure_n_success.dart';
 import 'package:care360/models/clock-in-out-details/clock.dart';
@@ -285,11 +287,11 @@ class ShiftService {
       }
 
       // notify care home
-      MessagingService(_messagingHelper, _firestoreHelper).send(
+      unawaited(MessagingService(_messagingHelper, _firestoreHelper).send(
         'Caregiver Clocked In',
         'Caregiver has clocked in for the shift',
         userId: shift.careHomeId,
-      );
+      ));
 
       return Right(SuccessResponse.clockInSuccessMessage);
     } catch (e) {
@@ -377,11 +379,11 @@ class ShiftService {
       }
 
       // notify care home
-      MessagingService(_messagingHelper, _firestoreHelper).send(
+      unawaited(MessagingService(_messagingHelper, _firestoreHelper).send(
         'Caregiver Clocked Out',
         'Caregiver has clocked out for the shift',
         userId: shift.careHomeId,
-      );
+      ));
 
       return Right(SuccessResponse.clockOutSuccessMessage);
     } catch (e) {

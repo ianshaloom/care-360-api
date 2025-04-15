@@ -376,11 +376,11 @@ extension RepeatTypeExtension on RepeatType {
   String get name {
     switch (this) {
       case RepeatType.none:
-        return 'None';
+        return 'none';
       case RepeatType.daily:
-        return 'Daily';
+        return 'daily';
       case RepeatType.weekly:
-        return 'Weekly';
+        return 'weekly';
     }
   }
 }
@@ -390,11 +390,11 @@ extension RepeatTypeStringExtension on String {
   /// Convert string to RepeatType
   RepeatType get repeatType {
     switch (this) {
-      case 'None':
+      case 'none':
         return RepeatType.none;
-      case 'Daily':
+      case 'daily':
         return RepeatType.daily;
-      case 'Weekly':
+      case 'weekly':
         return RepeatType.weekly;
       default:
         return RepeatType.none;
@@ -423,13 +423,13 @@ extension RequestStatusExtension on RequestStatus {
   String get name {
     switch (this) {
       case RequestStatus.open:
-        return 'Open';
+        return 'open';
       case RequestStatus.floating:
-        return 'Floating';
+        return 'floating';
       case RequestStatus.assigned:
-        return 'Assigned';
+        return 'assigned';
       case RequestStatus.expired:
-        return 'Expired';
+        return 'expired';
     }
   }
 }
@@ -439,13 +439,13 @@ extension RequestStatusStringExtension on String {
   /// Convert string to RequestStatus
   RequestStatus get requestStatus {
     switch (this) {
-      case 'Open':
+      case 'open':
         return RequestStatus.open;
-      case 'Floating':
+      case 'floating':
         return RequestStatus.floating;
-      case 'Assigned':
+      case 'assigned':
         return RequestStatus.assigned;
-      case 'Expired':
+      case 'expired':
         return RequestStatus.expired;
       default:
         return RequestStatus.open;

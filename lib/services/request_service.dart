@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:care360/constants/constants.dart';
 import 'package:care360/errors/failure_n_success.dart';
 import 'package:care360/models/request-model/request_model.dart';
@@ -71,11 +73,11 @@ class RequestService {
       );
 
       // Notify the admins that a request has been created
-      MessagingService(_messagingHelper, _firestoreHelper).multicast(
+      unawaited(MessagingService(_messagingHelper, _firestoreHelper).multicast(
         'New Request',
         'A new request has been created by ${requestModel.requestId}',
         user: 'admin',
-      );
+      ));
 
       return Right(requestId);
     } catch (e) {
