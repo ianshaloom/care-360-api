@@ -141,15 +141,18 @@ class ShiftAlgorithm {
     }
 
     // Notify the available caregivers, first get tokens from the available
-    unawaited(MessagingService(_messagingHelper, _firestoreHelper).multicast(
-      'Open Shifts',
-      'A new request has been floated, check out the available shifts',
-      user: 'care-giver',
-    ),);
+    unawaited(
+      MessagingService(_messagingHelper, _firestoreHelper).multicast(
+        'Available Open Shifts',
+        'Shifts from ${request.careHome.fullName} have been floated, check out'
+            ' the available shifts',
+        user: 'care-giver',
+      ),
+    );
   }
 
   /// Main function to Accept a Shift from a given request
-  Future<void> acceptRequestShift(
+  Future<bool> acceptRequestShift(
     String requestId,
     String shiftId,
     String careGiverId,
@@ -162,11 +165,18 @@ class ShiftAlgorithm {
       shiftId,
     );
 
+    // -- check if the snapshot is empty, if it is, throw an exception
     if (snapshot.isEmpty) {
-      throw Exception('Shift not found');
+      throw Exception('Shift was not found among the assignable shifts');
     }
 
     final shift = ShiftModel.fromSnapshot(snapshot);
+
+    // -- check if the shift is already picked, if it is, throw an exception
+    if (shift.floatStatus == FloatStatus.picked) {
+      throw Exception('Shift already picked, please pick another shift or try '
+          'refreshing the page or application');
+    }
 
     // Step 2: Check if there is an overlap
     final s = DateTime(
@@ -189,7 +199,8 @@ class ShiftAlgorithm {
 
     // if there is an overlap, continue to the next care giver ---
     if (thereIsOverlap) {
-      throw Exception('Shift overlaps with existing shift');
+      throw Exception('This shift overlaps with existing shift, atleast one '
+          'of the shifts you have already accepted, please pick another shift');
     }
 
     // Step 3: Else Update the shift with the caregiverId
@@ -214,27 +225,7 @@ class ShiftAlgorithm {
       documentId: shiftId,
     );
 
-    // Step 3: Update the caregiver's assigned shifts
-    final caregiverSnapshot = await _firestoreHelper.getDocument(
-      caregiverCollection,
-      careGiverId,
-    );
-
-    if (caregiverSnapshot.isEmpty) {
-      throw Exception('Caregiver not found');
-    }
-
-    final caregiver = CareGiverModel.fromSnapshot(caregiverSnapshot);
-
-    final updatedCaregiver = caregiver.copyWith(
-      assignedShifts: [...caregiver.assignedShifts, shiftId],
-    );
-
-    await _firestoreHelper.updateDocument(
-      caregiverCollection,
-      careGiverId,
-      updatedCaregiver.toDoc(),
-    );
+    return true;
   }
 
   /// Main function to assign shifts
@@ -278,10 +269,13 @@ class ShiftAlgorithm {
           await _saveShift(shift);
 
           // Update caregiver's shift count --
-          final c = caregiver.copyWith(
+          /* final c = caregiver.copyWith(
             assignedShifts: [shift.shiftId],
           );
-          await _updateCaregiverShifts(caregiver.caregiverId, c.toDoc());
+          await _updateCaregiverShifts(caregiver.caregiverId, c.toDoc()); */
+
+          // send notification to the caregiver
+          sendShiftNotifToCaregiver(caregiver.caregiverId);
 
           caregiverShiftCount[caregiver.caregiverId] = assignedShifts + 1;
           shiftAssigned = true;
@@ -327,11 +321,13 @@ class ShiftAlgorithm {
         await _saveShift(shift);
 
         // Update caregiver's shift count
-        final c = caregiver.copyWith(
+        /* final c = caregiver.copyWith(
           assignedShifts: [...caregiver.assignedShifts, shift.shiftId],
         );
+        await _updateCaregiverShifts(caregiver.caregiverId, c.toDoc()); */
 
-        await _updateCaregiverShifts(caregiver.caregiverId, c.toDoc());
+        // send notification to the caregiver
+        sendShiftNotifToCaregiver(caregiver.caregiverId);
 
         // update the caregiver's shift count in the local map
         caregiverShiftCount[caregiver.caregiverId] = assignedShifts + 1;
@@ -425,23 +421,15 @@ class ShiftAlgorithm {
     );
   }
 
-  /// Update caregiver's shift count
-  Future<void> _updateCaregiverShifts(
-    String caregiverId,
-    Map<String, dynamic> data,
-  ) async {
-    await _firestoreHelper.updateDocument(
-      caregiverCollection,
-      caregiverId,
-      data,
+  /// Send notification to caregiver
+  void sendShiftNotifToCaregiver(String caregiverId) {
+    unawaited(
+      MessagingService(_messagingHelper, _firestoreHelper).send(
+        'New Shift Assigned',
+        'You have been assigned a new shift, please check and confirm',
+        userId: caregiverId,
+      ),
     );
-
-    // Notify the caregiver
-    unawaited(MessagingService(_messagingHelper, _firestoreHelper).send(
-      'Request Assigned',
-      'A request has been assigned to you',
-      userId: caregiverId,
-    ));
   }
 
   Future<bool> _fetchShiftsForCaregiverOnDate(

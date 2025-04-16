@@ -93,6 +93,19 @@ class FirestoreHelper {
     await _firestore.collection(collection).doc(documentId).update(data);
   }
 
+  /// Update a specific field in an existing document in Firestore.
+  Future<void> updateDocumentField(
+    String collection,
+    String documentId,
+    String field,
+    dynamic value,
+  ) async {
+    await _firestore
+        .collection(collection)
+        .doc(documentId)
+        .update({field: value});
+  }
+
   /// Updates an existing document in a Referenced Firestore sub-collection.
   Future<void> updateSubDocument(
     String collection,
@@ -180,6 +193,42 @@ class FirestoreHelper {
       for (var i = 0; i < fields.length; i++) {
         query = query.where(fields[i], filters[i], values![i]);
       }
+    }
+
+    // Add orderBy clause
+    if (orderByField != null) {
+      query = query.orderBy(orderByField, descending: descending ?? false);
+    }
+
+    // Add limit
+    if (limit != null) {
+      query = query.limit(limit);
+    }
+
+    return query.get();
+  }
+
+  ///  Runs a query on a Firestore Sub collection with one filter.
+  Future<QuerySnapshot<Map<String, Object?>>>
+      querySubCollectionWithOneFilter(
+    String collection,
+    String documentId,
+    String subCollection, {
+    String? field,
+    WhereFilter? filter,
+    dynamic value,
+    int? limit,
+    String? orderByField,
+    bool? descending,
+  }) async {
+    Query<Map<String, Object?>> query = _firestore
+        .collection(collection)
+        .doc(documentId)
+        .collection(subCollection);
+
+    // Add where clause
+    if (field != null && filter != null) {
+      query = query.where(field, filter, value);
     }
 
     // Add orderBy clause

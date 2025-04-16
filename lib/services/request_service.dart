@@ -8,6 +8,7 @@ import 'package:care360/utils/assign_shift_algo.dart';
 import 'package:care360/utils/data/success_response.dart';
 import 'package:care360/utils/helpers/firestore_helper.dart';
 import 'package:care360/utils/helpers/messaging_helper.dart';
+import 'package:dart_firebase_admin/firestore.dart';
 import 'package:dartz/dartz.dart';
 
 /// Service class for managing request-related operations.
@@ -112,6 +113,30 @@ class RequestService {
     }
   }
 
+  /// Updates a specific field in an existing request in Firestore.
+  Future<Either<Failure, String>> updateRequestField(
+    String requestId,
+    String field,
+    dynamic value,
+  ) async {
+    try {
+      await _firestoreHelper.updateDocumentField(
+        requestCollection,
+        requestId,
+        field,
+        value,
+      );
+
+      return Right(requestId);
+    } catch (e) {
+      return Left(
+        GevericFailure(
+          errorMessage: 'Failed to update request field: $e',
+        ),
+      );
+    }
+  }
+
   /// Deletes a client from Firestore.
   Future<Either<Failure, String>> deleteRequest(String requestId) async {
     try {
@@ -157,6 +182,13 @@ class RequestService {
       // Float the request
       await shiftAlgo.floatRequestShifts(requestModel);
 
+      // update the request status
+      await updateRequestField(
+        requestId,
+        'status',
+        'floating',
+      );
+
       return const Right('Request floated');
     } catch (e) {
       return Left(
@@ -177,7 +209,37 @@ class RequestService {
       final shiftAlgo = ShiftAlgorithm(_firestoreHelper, _messagingHelper);
 
       // accept the request
-      await shiftAlgo.acceptRequestShift(requestId, shiftId, caregiverId);
+      final accepted = await shiftAlgo.acceptRequestShift(
+        requestId,
+        shiftId,
+        caregiverId,
+      );
+
+      if (accepted) {
+        // check if their is still any shift left floating
+        const collection = requestCollection;
+        const subCollection = assignableShiftCollection;
+        // fetch the request
+        final result = await _firestoreHelper.querySubCollectionWithOneFilter(
+          collection,
+          requestId,
+          subCollection,
+          field: 'floatStatus',
+          value: 'floating',
+          filter: WhereFilter.equal,
+          limit: 1,
+        );
+
+        // check if the result is empty
+        if (result.docs.isEmpty) {
+          // update the request status
+          await updateRequestField(
+            requestId,
+            'status',
+            'assigned',
+          );
+        }
+      }
 
       return Right(SuccessResponse.clockInSuccessMessage);
     } catch (e) {

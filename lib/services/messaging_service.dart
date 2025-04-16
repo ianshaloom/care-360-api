@@ -33,7 +33,7 @@ class MessagingService {
   ) async {
     final snapshot = await _firestoreHelper.queryCollection(
       notifTokenCollection,
-      field: 'user',
+      field: 'role',
       value: user,
     );
 
