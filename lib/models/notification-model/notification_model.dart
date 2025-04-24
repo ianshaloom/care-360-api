@@ -22,9 +22,9 @@ class NotificationModel {
   /// Notification Model from Request Model
   factory NotificationModel.fromRequestModel(RequestModel requestModel) {
     return NotificationModel(
-      notificationId: requestModel.careHomeId,
+      notificationId: requestModel.clientId,
       uid: const Uuid().v4(),
-      message: 'New request from ${requestModel.careHomeId}',
+      message: 'New request from ${requestModel.clientDetails.fullName}',
       type: 'request',
       read: false,
       relatedEntityId: requestModel.requestId,

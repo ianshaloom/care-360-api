@@ -12,7 +12,7 @@ ShiftModel _$ShiftModelFromJson(Map<String, dynamic> json) => ShiftModel(
       requestId: json['requestId'] as String,
       caregiverId: json['caregiverId'] as String,
       clientId: json['clientId'] as String,
-      careHomeId: json['careHomeId'] as String,
+      clientType:  json['clientType'] as String,
       status: $enumDecode(_$ShiftStatusEnumMap, json['status']),
       floatStatus: $enumDecode(_$FloatStatusEnumMap, json['floatStatus']),
       notes: (json['notes'] as Map<String, dynamic>).map(
@@ -24,7 +24,9 @@ ShiftModel _$ShiftModelFromJson(Map<String, dynamic> json) => ShiftModel(
       clockOut: json['clockOut'] != null
           ? Clock.fromSnapshot(json['clockOut'] as Map<String, dynamic>)
           : null,
-      careHome: CareHome.fromSnapshot(json['careHome'] as Map<String, dynamic>),
+      clientDetails: ClientDetails.fromSnapshot(
+        json['clientDetails'] as Map<String, dynamic>,
+      ),
       startTime: (json['startTime'] as Timestamp).toDateTime(),
       endTime: (json['endTime'] as Timestamp).toDateTime(),
       createdAt: (json['createdAt'] as Timestamp).toDateTime(),
@@ -42,7 +44,7 @@ Map<String, dynamic> _$ShiftModelToDoc(ShiftModel instance) =>
       'requestId': instance.requestId,
       'caregiverId': instance.caregiverId,
       'clientId': instance.clientId,
-      'careHomeId': instance.careHomeId,
+      'clientType': instance.clientType,
       'startTime': instance.startTime,
       'endTime': instance.endTime,
       'status': _$ShiftStatusEnumMap[instance.status],
@@ -50,7 +52,7 @@ Map<String, dynamic> _$ShiftModelToDoc(ShiftModel instance) =>
       'notes': instance.notes,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'careHome': instance.careHome.toJson(),
+      'clientDetails': instance.clientDetails.toJson(),
       'clockIn': instance.clockIn?.toDoc(),
       'clockOut': instance.clockOut?.toDoc(),
     };
@@ -63,13 +65,13 @@ Map<String, dynamic> _$ShiftModelToJson(ShiftModel instance) =>
       'requestId': instance.requestId,
       'caregiverId': instance.caregiverId,
       'clientId': instance.clientId,
-      'careHomeId': instance.careHomeId,
+      'clientType': instance.clientType,
       'status': _$ShiftStatusEnumMap[instance.status],
       'floatStatus': _$FloatStatusEnumMap[instance.floatStatus],
       'notes': instance.notes,
       'clockIn': instance.clockIn?.toJson(),
       'clockOut': instance.clockOut?.toJson(),
-      'careHome': instance.careHome.toJson(),
+      'clientDetails': instance.clientDetails.toJson(),
       'startTime': instance.startTime.toIso8601String(),
       'endTime': instance.endTime.toIso8601String(),
       'createdAt': instance.createdAt.toIso8601String(),

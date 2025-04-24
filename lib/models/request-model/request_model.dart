@@ -1,4 +1,5 @@
-import 'package:care360/models/care-home-details/care_home.dart';
+import 'package:care360/models/client-details/client_details.dart';
+import 'package:care360/models/domiciliary-model/domiciliary_model.dart';
 import 'package:care360/models/shift-model/shift_model.dart';
 import 'package:care360/utils/helpers/timestamp_helper.dart';
 import 'package:dart_firebase_admin/firestore.dart';
@@ -14,14 +15,15 @@ class RequestModel {
   /// Constructor for [RequestModel]
   RequestModel({
     required this.requestId,
-    required this.careHomeId,
+    required this.clientType,
+    required this.clientId,
+    required this.clientDetails,
     required this.status,
-    required this.careRequirements,
     required this.shiftStartTime,
     required this.shiftEndTime,
-    required this.additionalNotes,
     required this.createdAt,
-    required this.careHome,
+    this.careRequirements,
+    this.additionalNotes,
     this.updatedAt,
     this.assignedCaregiverId,
     this.expiresAt,
@@ -34,12 +36,14 @@ class RequestModel {
   /// Static function to create an empty [RequestModel]
   RequestModel.empty()
       : requestId = '',
-        careHomeId = '',
+        clientType = ClientType.carehome,
+        clientId = '',
+        clientDetails = ClientDetails.empty(),
         status = RequestStatus.open,
         careRequirements = '',
+        additionalNotes = '',
         shiftStartTime = DateTime.now(),
         shiftEndTime = DateTime.now(),
-        additionalNotes = '',
         createdAt = DateTime.now(),
         updatedAt = DateTime.now(),
         assignedCaregiverId = '',
@@ -47,7 +51,6 @@ class RequestModel {
         untilDate = DateTime.now(),
         repeatType = RepeatType.none,
         repeatDays = [],
-        careHome = CareHome.empty(),
         selectedDates = [];
 
   /// Static function to create [RequestModel] from a Firestore snapshot
@@ -63,7 +66,9 @@ class RequestModel {
   /// CopyWith method for [RequestModel]
   RequestModel copyWith({
     String? requestId,
-    String? careHomeId,
+    ClientType? clientType,
+    String? clientId,
+    ClientDetails? clientDetails,
     RequestStatus? status,
     String? careRequirements,
     DateTime? shiftStartTime,
@@ -77,11 +82,13 @@ class RequestModel {
     RepeatType? repeatType,
     List<int>? repeatDays,
     List<DateTime>? selectedDates,
-    CareHome? careHome,
+    ClientDetails? reqHome,
   }) {
     return RequestModel(
       requestId: requestId ?? this.requestId,
-      careHomeId: careHomeId ?? this.careHomeId,
+      clientType: clientType ?? this.clientType,
+      clientId: clientId ?? this.clientId,
+      clientDetails: clientDetails ?? this.clientDetails,
       status: status ?? this.status,
       careRequirements: careRequirements ?? this.careRequirements,
       shiftStartTime: shiftStartTime ?? this.shiftStartTime,
@@ -95,7 +102,6 @@ class RequestModel {
       repeatType: repeatType ?? this.repeatType,
       repeatDays: repeatDays ?? this.repeatDays,
       selectedDates: selectedDates ?? this.selectedDates,
-      careHome: careHome ?? this.careHome,
     );
   }
 
@@ -104,12 +110,12 @@ class RequestModel {
   Map<String, String> toNotificationJson() {
     return {
       'requestId': requestId,
-      'careHomeId': careHomeId,
       'status': status.name,
-      'careRequirements': careRequirements,
+      'careRequirements': careRequirements ?? '',
       'shiftStartTime': shiftStartTime.toIso8601String(),
       'shiftEndTime': shiftEndTime.toIso8601String(),
-      'additionalNotes': additionalNotes,
+      'additionalNotes': additionalNotes ?? '',
+      'repeatType': repeatType.name,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String() ?? '',
       'assignedCaregiverId': assignedCaregiverId ?? '',
@@ -126,33 +132,26 @@ class RequestModel {
   /// If the request is a repeating request, it will return multiple shifts
   /// based on the repeat type and dates
 
-  List<ShiftModel> generateShifts({
-    String clientId = '',
-  }) {
-    // if the client and caregiver ID are empty, return an empty list
-    final caregiverId = assignedCaregiverId ?? '';
-    if (clientId.isEmpty && caregiverId.isEmpty) {
-      return [];
-    }
-
+  /// The [clientId] is used to create the shifts
+  List<ShiftModel> generateShifts(String clientId) {
     final shifts = <ShiftModel>[];
 
     final shift = ShiftModel(
       shiftId: const Uuid().v4(),
       requestId: requestId,
-      careHomeId: careHomeId,
-      caregiverId: caregiverId,
+      caregiverId: '',
+      clientType: clientType.name,
       clientId: clientId,
       startTime: shiftStartTime,
       endTime: shiftEndTime,
       status: ShiftStatus.scheduled,
       floatStatus: FloatStatus.floating,
       notes: {
-        'additionalNotes': additionalNotes,
-        'careRequirements': careRequirements,
+        'additionalNotes': additionalNotes ?? '',
+        'careRequirements': careRequirements ?? '',
       },
       createdAt: DateTime.now(),
-      careHome: careHome,
+      clientDetails: clientDetails,
     );
 
     // add the first shift
@@ -297,17 +296,23 @@ class RequestModel {
   /// Unique identifier for the request
   final String requestId;
 
-  /// ID of the care home making the request
-  final String careHomeId;
+  /// Type of client making the request
+  final ClientType clientType;
+
+  /// ID of the client making the request
+  final String clientId;
+
+  /// Details about the client (either CareHome or DomiciliaryClient)
+  final ClientDetails clientDetails;
 
   /// Status of the request (e.g., "open", "assigned", "expired")
   final RequestStatus status;
 
   /// Type of care required (e.g., medical, personal)
-  final String careRequirements;
+  final String? careRequirements;
 
   /// Additional notes or instructions for the caregiver
-  final String additionalNotes;
+  final String? additionalNotes;
 
   /// ID of the caregiver assigned to the request (if any)
   final String? assignedCaregiverId;
@@ -341,13 +346,24 @@ class RequestModel {
   /// Timestamp when the request expires
   final DateTime? expiresAt;
 
-  /// Care Home
-  final CareHome careHome;
+  /// Convenience getter for care home details (if client is a care home)
+  ClientDetails? get careHomeDetails {
+    return clientType == ClientType.carehome
+        ? clientDetails as ClientDetails?
+        : null;
+  }
+
+  /// Convenience getter for domiciliary details (if client is domiciliary)
+  DomiciliaryModel? get domiciliaryDetails {
+    return clientType == ClientType.domiciliary
+        ? clientDetails as DomiciliaryModel?
+        : null;
+  }
 
   /// Override toString method for better logging and debugging
   @override
   String toString() {
-    return 'RequestModel{requestId: $requestId, careHomeId: $careHomeId,'
+    return 'RequestModel{requestId: $requestId, clientType: $clientType,'
         ' status: $status, careRequirements: $careRequirements,'
         ' shiftStartTime: $shiftStartTime, shiftEndTime: $shiftEndTime,'
         ' additionalNotes: $additionalNotes, createdAt: $createdAt,'
@@ -356,6 +372,15 @@ class RequestModel {
         ' repeatType: $repeatType,'
         ' repeatDays: $repeatDays, selectedDates: $selectedDates}';
   }
+}
+
+/// The type of client making the request
+enum ClientType {
+  ///
+  carehome,
+
+  ///
+  domiciliary,
 }
 
 /// Enum for the type of repetition for a shift

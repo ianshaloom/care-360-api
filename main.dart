@@ -15,14 +15,14 @@ String? privateKey =
 FirebaseAdminApp? firebaseAdmin;
 
 Future<void> init(InternetAddress ip, int port) async {
-  Logger(). i('🏁 🏁 🏁 Initializing Firebase Admin SDK... 🏁 🏁 \n');
+  Logger().i('🏁 🏁 🏁 Initializing Firebase Admin SDK... 🏁 🏁 \n');
 
   // Check if the required environment variables are set
   if (projectId == null ||
       clientId == null ||
       clientEmail == null ||
       privateKey == null) {
-        Logger().e('🏁 🏁 Firebase Admin SDK initialization failed! 🏁 🏁 \n');
+    Logger().e('🏁 🏁 Firebase Admin SDK initialization failed! 🏁 🏁 \n');
     Logger().e('🏁 🏁 Please set the required environment variables: '
         'PROJECT_ID, CLIENT_ID, CLIENT_EMAIL, PRIVATE_KEY 🏁 🏁 \n');
     exit(1);

@@ -290,7 +290,7 @@ class ShiftService {
       unawaited(MessagingService(_messagingHelper, _firestoreHelper).send(
         'Caregiver Clocked In',
         'Caregiver has clocked in for the shift',
-        userId: shift.careHomeId,
+        userId: shift.clientId,
       ));
 
       return Right(SuccessResponse.clockInSuccessMessage);
@@ -382,7 +382,7 @@ class ShiftService {
       unawaited(MessagingService(_messagingHelper, _firestoreHelper).send(
         'Caregiver Clocked Out',
         'Caregiver has clocked out for the shift',
-        userId: shift.careHomeId,
+        userId: shift.clientId,
       ));
 
       return Right(SuccessResponse.clockOutSuccessMessage);

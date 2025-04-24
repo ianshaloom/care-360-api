@@ -21,7 +21,7 @@ class ShiftDistributor {
     }
 
     // Step 2: Generate shifts from request
-    final generatedShifts = request.generateShifts(clientId: 'none');
+    final generatedShifts = request.generateShifts(request.clientId);
 
     // Step 3: Fetch existing shifts for the same date(s)
     final caregiverShiftCount =

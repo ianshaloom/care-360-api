@@ -33,7 +33,8 @@ Future<Response> _post(RequestContext context, String id) async {
     Failure failure = EmptyFailure(errorMessage: '');
     var success = '';
 
-    final response = await repo.acceptRequest(id, shiftId, careGiverId);
+    final response =
+        await repo.acceptFloatedShiftFromRequest(id, shiftId, careGiverId);
 
     response.fold(
       (f) => failure = f,

@@ -8,7 +8,7 @@ const String caregiverCollection = 'care-givers';
 const String careHomeCollection = 'care-homes';
 
 /// firestore care recipients collections
-const String clientsCollection = 'clients';
+const String domiciliaryCollection = 'domiciliaries';
 
 /// firestore admins collections
 const String adminCollection = 'admins';

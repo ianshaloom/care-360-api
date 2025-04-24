@@ -1,6 +1,6 @@
 import 'package:care360/constants/constants.dart';
 import 'package:care360/errors/failure_n_success.dart';
-import 'package:care360/models/client-model/client_model.dart';
+import 'package:care360/models/domiciliary-model/domiciliary_model.dart';
 import 'package:care360/utils/helpers/firestore_helper.dart';
 import 'package:dartz/dartz.dart';
 
@@ -12,16 +12,16 @@ class ClientService {
   final FirestoreHelper _firestoreHelper;
 
   /// Fetches a client by their unique ID.
-  Future<Either<Failure, ClientModel>> getClient(
+  Future<Either<Failure, DomiciliaryModel>> getClient(
     String clientId,
   ) async {
     try {
       final snapshot =
-          await _firestoreHelper.getDocument(clientsCollection, clientId);
+          await _firestoreHelper.getDocument(domiciliaryCollection, clientId);
       if (snapshot.isEmpty) {
         throw Exception('Client not found');
       }
-      return Right(ClientModel.fromSnapshot(snapshot));
+      return Right(DomiciliaryModel.fromSnapshot(snapshot));
     } catch (e) {
       return Left(
         GevericFailure(
@@ -32,12 +32,14 @@ class ClientService {
   }
 
   /// Fetches all clients from Firestore.
-  Future<Either<Failure, List<ClientModel>>> getAllClients() async {
+  Future<Either<Failure, List<DomiciliaryModel>>> getAllClients() async {
     try {
-      final snapshot = await _firestoreHelper.getCollection(clientsCollection);
+      final snapshot = await _firestoreHelper.getCollection(
+        domiciliaryCollection,
+      );
 
       final clients = snapshot.docs
-          .map((doc) => ClientModel.fromSnapshot(doc.data()))
+          .map((doc) => DomiciliaryModel.fromSnapshot(doc.data()))
           .toList();
       return Right(clients);
     } catch (e) {
@@ -51,12 +53,12 @@ class ClientService {
 
   /// Creates a new client in Firestore.
   Future<Either<Failure, String>> createClient(
-    ClientModel client,
+    DomiciliaryModel client,
   ) async {
     try {
       final clientData = client.toSnapshot();
       final clientId = await _firestoreHelper.addDocument(
-        clientsCollection,
+        domiciliaryCollection,
         clientData,
         documentId: client.clientId,
       );
@@ -72,13 +74,13 @@ class ClientService {
 
   /// Updates an existing client in Firestore.
   Future<Either<Failure, String>> updateClient(
-    ClientModel client,
+    DomiciliaryModel client,
   ) async {
     try {
       final clientData = client.toSnapshot();
 
       await _firestoreHelper.updateDocument(
-        clientsCollection,
+        domiciliaryCollection,
         client.clientId,
         clientData,
       );
@@ -96,7 +98,7 @@ class ClientService {
   /// Deletes a client from Firestore.
   Future<Either<Failure, String>> deleteClient(String clientId) async {
     try {
-      await _firestoreHelper.deleteDocument(clientsCollection, clientId);
+      await _firestoreHelper.deleteDocument(domiciliaryCollection, clientId);
       return Right(clientId);
     } catch (e) {
       return Left(

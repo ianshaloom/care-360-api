@@ -1,4 +1,4 @@
-import 'package:care360/models/care-home-details/care_home.dart';
+import 'package:care360/models/client-details/client_details.dart';
 import 'package:care360/models/clock-in-out-details/clock.dart';
 import 'package:care360/models/request-model/request_model.dart';
 import 'package:care360/utils/helpers/timestamp_helper.dart';
@@ -18,14 +18,14 @@ class ShiftModel {
     required this.requestId,
     required this.caregiverId,
     required this.clientId,
-    required this.careHomeId,
+    required this.clientType,
     required this.startTime,
     required this.endTime,
     required this.status,
     required this.floatStatus,
     required this.notes,
     required this.createdAt,
-    required this.careHome,
+    required this.clientDetails,
     this.updatedAt,
     this.clockOut,
     this.clockIn,
@@ -38,18 +38,18 @@ class ShiftModel {
       requestId: request.requestId,
       caregiverId: request.assignedCaregiverId!,
       clientId: '',
-      careHomeId: request.careHomeId,
+      clientType: request.clientType.name,
       startTime: request.shiftStartTime,
       endTime: request.shiftEndTime,
       status: ShiftStatus.scheduled,
       floatStatus: FloatStatus.notFloated,
       notes: {
-        'careRequirements': request.careRequirements,
-        'additionalNotes': request.additionalNotes,
+        'careRequirements': request.careRequirements ?? '',
+        'additionalNotes': request.additionalNotes ?? '',
       },
       createdAt: request.createdAt,
       updatedAt: request.updatedAt ?? request.createdAt,
-      careHome: request.careHome,
+      clientDetails: request.clientDetails,
     );
   }
 
@@ -59,7 +59,7 @@ class ShiftModel {
         requestId = '',
         caregiverId = '',
         clientId = '',
-        careHomeId = '',
+        clientType = '',
         startTime = DateTime.now(),
         endTime = DateTime.now(),
         status = ShiftStatus.scheduled,
@@ -67,7 +67,7 @@ class ShiftModel {
         notes = {},
         createdAt = DateTime.now(),
         updatedAt = DateTime.now(),
-        careHome = CareHome.empty(),
+        clientDetails = ClientDetails.empty(),
         clockIn = Clock.empty(),
         clockOut = Clock.empty();
 
@@ -88,7 +88,7 @@ class ShiftModel {
       'requestId': requestId,
       'caregiverId': caregiverId,
       'clientId': clientId,
-      'careHomeId': careHomeId,
+      'clientType': clientType,
       'startTime': startTime.toIso8601String(),
       'endTime': endTime.toIso8601String(),
       'status': status.value,
@@ -98,7 +98,7 @@ class ShiftModel {
       'updatedAt': updatedAt?.toIso8601String() ?? '',
       'clockIn': clockIn!.toJson().toString(),
       'clockOut': clockOut!.toJson().toString(),
-      'careHome': careHome.toJson().toString(),
+      'careHome': clientDetails.toJson().toString(),
     };
   }
 
@@ -112,7 +112,7 @@ class ShiftModel {
     String? requestId,
     String? caregiverId,
     String? clientId,
-    String? careHomeId,
+    String? clientType,
     DateTime? startTime,
     DateTime? endTime,
     ShiftStatus? status,
@@ -122,14 +122,14 @@ class ShiftModel {
     DateTime? updatedAt,
     Clock? clockIn,
     Clock? clockOut,
-    CareHome? careHome,
+    ClientDetails? clientDetails,
   }) {
     return ShiftModel(
       shiftId: shiftId ?? this.shiftId,
       requestId: requestId ?? this.requestId,
       caregiverId: caregiverId ?? this.caregiverId,
       clientId: clientId ?? this.clientId,
-      careHomeId: careHomeId ?? this.careHomeId,
+      clientType: clientType ?? this.clientType,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       status: status ?? this.status,
@@ -139,7 +139,7 @@ class ShiftModel {
       updatedAt: updatedAt ?? this.updatedAt,
       clockIn: clockIn ?? this.clockIn,
       clockOut: clockOut ?? this.clockOut,
-      careHome: careHome ?? this.careHome,
+      clientDetails: clientDetails ?? this.clientDetails,
     );
   }
 
@@ -155,14 +155,9 @@ class ShiftModel {
   /// ID of the client receiving care during the shift
   final String clientId;
 
-  /// ID of the care home managing the shift
-  final String careHomeId;
+  /// client type
+  final String clientType;
 
-  /// Start time of the shift
-  final DateTime startTime;
-
-  /// End time of the shift
-  final DateTime endTime;
 
   /// Status of the shift (e.g., "scheduled", "in-progress", "completed")
   final ShiftStatus status;
@@ -170,20 +165,26 @@ class ShiftModel {
   /// Status of the float request shift
   final FloatStatus floatStatus;
 
+    /// Start time of the shift
+  final DateTime startTime;
+
+  /// End time of the shift
+  final DateTime endTime;
+
   /// Timestamp when the shift was created
   final DateTime createdAt;
 
   /// Timestamp when the shift was last updated
   final DateTime? updatedAt;
 
-  /// CH_Details
-  final CareHome careHome;
-
-  /// Timestamp when the caregiver clocked in
+    /// Timestamp when the caregiver clocked in
   final Clock? clockIn;
 
   /// Timestamp when the caregiver clocked out
   final Clock? clockOut;
+
+  /// CH_Details
+  final ClientDetails clientDetails;
 
   /// List of notes or instructions for the shift
   final Map<String, String> notes;
@@ -192,7 +193,7 @@ class ShiftModel {
   @override
   String toString() {
     return '\nShiftModel { shiftId: $shiftId, caregiverId: $caregiverId,'
-        ' clientId: $clientId, careHomeId: $careHomeId,'
+        ' clientId: $clientId, ,'
         ' startTime: $startTime, requestId: $requestId,'
         ' endTime: $endTime, status: $status, notes: $notes,'
         ' createdAt: $createdAt, floatStatus: $floatStatus,'

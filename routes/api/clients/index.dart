@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:care360/errors/failure_n_success.dart';
-import 'package:care360/models/client-model/client_model.dart';
-import 'package:care360/services/client_service.dart';
+import 'package:care360/models/domiciliary-model/domiciliary_model.dart';
+import 'package:care360/services/domiciliary_service.dart';
 import 'package:dart_frog/dart_frog.dart';
 
 Future<Response> onRequest(RequestContext context) {
@@ -67,7 +67,7 @@ Future<Response> _post(RequestContext context) async {
     var success = '';
 
     final response = await repo.createClient(
-      ClientModel.fromSnapshot(data),
+      DomiciliaryModel.fromSnapshot(data),
     );
 
     response.fold(

@@ -8,12 +8,16 @@ part of 'request_model.dart';
 
 RequestModel _$RequestModelFromJson(Map<String, dynamic> json) => RequestModel(
       requestId: json['requestId'] as String,
-      careHomeId: json['careHomeId'] as String,
+      clientId: json['clientId'] as String,
+      clientType: $enumDecode(_$ClientTypeEnumMap, json['clientType']),
+      clientDetails: ClientDetails.fromSnapshot(
+        json['clientDetails'] as Map<String, dynamic>,
+      ),
       status: $enumDecode(_$RequestStatusEnumMap, json['status']),
-      careRequirements: json['careRequirements'] as String,
+      careRequirements: (json['careRequirements'] ?? '') as String,
       shiftStartTime: (json['shiftStartTime'] as Timestamp).toDateTime(),
       shiftEndTime: (json['shiftEndTime'] as Timestamp).toDateTime(),
-      additionalNotes: json['additionalNotes'] as String,
+      additionalNotes: (json['additionalNotes'] ?? '') as String,
       createdAt: (json['createdAt'] as Timestamp).toDateTime(),
       updatedAt: json['updatedAt'] == null
           ? null
@@ -34,13 +38,14 @@ RequestModel _$RequestModelFromJson(Map<String, dynamic> json) => RequestModel(
       selectedDates: (json['selectedDates'] as List<dynamic>?)
           ?.map(_convertToDateTime)
           .toList(),
-      careHome: CareHome.fromSnapshot(json['careHome'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$RequestModelToJson(RequestModel instance) =>
     <String, dynamic>{
       'requestId': instance.requestId,
-      'careHomeId': instance.careHomeId,
+      'clientId': instance.clientId,
+      'clientType': _$ClientTypeEnumMap[instance.clientType],
+      'clientDetails': instance.clientDetails.toJson(),
       'status': _$RequestStatusEnumMap[instance.status],
       'careRequirements': instance.careRequirements,
       'additionalNotes': instance.additionalNotes,
@@ -55,13 +60,14 @@ Map<String, dynamic> _$RequestModelToJson(RequestModel instance) =>
       'expiresAt': instance.expiresAt?.toIso8601String(),
       'repeatType': _$RepeatTypeEnumMap[instance.repeatType],
       'repeatDays': instance.repeatDays,
-      'careHome': instance.careHome.toJson(),
     };
 
 Map<String, dynamic> _$RequestModelToDoc(RequestModel instance) =>
     <String, dynamic>{
       'requestId': instance.requestId,
-      'careHomeId': instance.careHomeId,
+      'clientId': instance.clientId,
+      'clientType': _$ClientTypeEnumMap[instance.clientType],
+      'clientDetails': instance.clientDetails.toJson(),
       'status': _$RequestStatusEnumMap[instance.status],
       'careRequirements': instance.careRequirements,
       'additionalNotes': instance.additionalNotes,
@@ -75,7 +81,6 @@ Map<String, dynamic> _$RequestModelToDoc(RequestModel instance) =>
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'expiresAt': instance.expiresAt,
-      'careHome': instance.careHome.toJson(),
     };
 
 const _$RequestStatusEnumMap = {
@@ -89,6 +94,11 @@ const _$RepeatTypeEnumMap = {
   RepeatType.none: 'none',
   RepeatType.daily: 'daily',
   RepeatType.weekly: 'weekly',
+};
+
+const _$ClientTypeEnumMap = {
+  ClientType.domiciliary: 'domiciliary',
+  ClientType.carehome: 'carehome',
 };
 
 /// Helper function to convert Firestore Timestamp or String to DateTime

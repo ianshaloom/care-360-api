@@ -1,4 +1,4 @@
-import 'package:care360/services/client_service.dart';
+import 'package:care360/services/domiciliary_service.dart';
 import 'package:care360/utils/helpers/firestore_helper.dart';
 import 'package:dart_firebase_admin/dart_firebase_admin.dart';
 import 'package:dart_firebase_admin/firestore.dart';

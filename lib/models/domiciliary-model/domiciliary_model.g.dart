@@ -1,20 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'client_model.dart';
+part of 'domiciliary_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ClientModel _$ClientModelFromJson(Map<String, dynamic> json) => ClientModel(
+DomiciliaryModel _$DomiciliaryModelFromJson(Map<String, dynamic> json) =>
+    DomiciliaryModel(
       clientId: json['clientId'] as String,
       name: json['name'] as String,
       age: (json['age'] as num).toInt(),
       location: json['location'] as String,
-      coordinates: (json['coordinates'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, (e as num).toDouble()),
-      ),
-      medicalHistory: json['medicalHistory'] as String,
+      geopoint:json['geopoint'] as GeoPoint,
+      medicalHistory: (json['medicalHistory'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       carePlan: json['carePlan'] as String,
       assignedCaregivers: (json['assignedCaregivers'] as List<dynamic>)
           .map((e) => e as String)
@@ -26,17 +27,17 @@ ClientModel _$ClientModelFromJson(Map<String, dynamic> json) => ClientModel(
           : DateTime.parse(json['updatedAt'] as String),
     );
 
-Map<String, dynamic> _$ClientModelToJson(ClientModel instance) =>
+Map<String, dynamic> _$DomiciliaryModelToJson(DomiciliaryModel instance) =>
     <String, dynamic>{
       'clientId': instance.clientId,
       'name': instance.name,
       'age': instance.age,
       'location': instance.location,
-      'coordinates': instance.coordinates,
+      'geopoint': instance.geopoint,
       'medicalHistory': instance.medicalHistory,
       'carePlan': instance.carePlan,
       'assignedCaregivers': instance.assignedCaregivers,
       'imageUrl': instance.imageUrl,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
