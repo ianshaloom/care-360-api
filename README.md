@@ -23,7 +23,7 @@ care-360-api/
 │   │   ├── user.dart
 │   │   ├── caregiver.dart
 │   │   ├── carehome.dart
-│   │   ├── client.dart
+│   │   ├── domiciliary.dart
 │   │   ├── request.dart
 │   │   ├── shift.dart
 │   │   ├── notification.dart
@@ -31,7 +31,7 @@ care-360-api/
 │   ├── services/                # Business logic and service layers
 │   │   ├── caregiver_service.dart
 │   │   ├── carehome_service.dart
-│   │   ├── client_service.dart
+│   │   ├── domiciliary_service.dart
 │   │   ├── request_service.dart
 │   │   ├── shift_service.dart
 │   │   ├── notification_service.dart
